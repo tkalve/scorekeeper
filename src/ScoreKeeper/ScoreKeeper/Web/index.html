@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Scorekeeper</title>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+        body, html, section {
+             height: 100%;
+        }
+        section {
+            display: flex;
+            flex-direction: column;
+        }
+        section > div.row {
+            flex: 1;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        section > div.row.shrink {
+            max-height: 2rem;
+        }
+        div.row > div {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            justify-content: center;
+            background: blue;
+        }
+        div.row > div > div {
+            flex: 1;
+            text-align: center;
+            margin-left: 5px;
+            margin-right: 5px;
+            justify-content: center;
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- ReSharper disable Html.PathError -->
+    <script src="jquery-3.1.0.min.js"></script>
+    <script src="jquery.signalR-2.2.1.min.js"></script>
+    <script src="signalr/hubs"></script>
+    <!-- ReSharper restore Html.PathError -->
+
+    <script type="text/javascript">
+        //$(function () {
+
+        //    var chat = $.connection.scoreHub;
+
+        //    chat.client.update = function (blueTeamName, whiteTeamName, blueTeamGoals, whiteTeamGoals, time, round) {
+        //        $('#blueTeamName').html(blueTeamName);
+        //        $('#whiteTeamName').html(whiteTeamName);
+        //        $('#blueTeamGoals').html(blueTeamGoals);
+        //        $('#whiteTeamGoals').html(whiteTeamGoals);
+        //        $('#clock').html(time);
+        //        $('#round').html(round);
+        //    }
+        //    chat.client.updateClock = function (time, round) {
+        //        $('#clock').html(time);
+        //        $('#round').htmlFor(round);
+        //    }
+        //    chat.client.updateScore = function(blueTeamGoals, whiteTeamGoals) {
+        //        $('#blueTeamGoals').html(blueTeamGoals);
+        //        $('#whiteTeamGoals').html(whiteTeamGoals);
+        //    }
+
+        //    $.connection.hub.start().done(function () {
+        //    });
+        //});
+
+
+        ; (function ($) {
+            $.fn.textfill = function (options) {
+                var fontSize = options.maxFontPixels;
+                var ourText = $('span:visible:first', this);
+                var maxHeight = $(this).height();
+                var maxWidth = $(this).width();
+                var textHeight;
+                var textWidth;
+                do {
+                    ourText.css('font-size', fontSize);
+                    textHeight = ourText.height();
+                    textWidth = ourText.width();
+                    fontSize = fontSize - 1;
+                } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
+                return this;
+            }
+        })(jQuery);
+
+        $(document).ready(function () {
+            $('div.row > div > div').textfill({ maxFontPixels: 120 });
+        });
+    </script>
+
+    <section>
+        <div class="row">
+            <div>
+                <div><span id="blueTeamName">NOR</span></div>
+                <div><span id="blueTeamGoals">10</span>-<span id="whiteTeamGoals">10</span></div>
+                <div><span id="whiteTeamName">NOR</span></div>
+            </div>
+        </div>
+        <div class="row shrink">
+            <div>
+                <div>
+                    <div style="background: #4682b4; height: 2rem;"></div>
+                </div>
+                <div></div>
+                <div>
+                    <div style="background: #c0c0c0; height: 2rem;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <div><span id="clock">8:00</span></div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

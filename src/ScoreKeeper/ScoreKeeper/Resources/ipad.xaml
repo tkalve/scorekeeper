@@ -1,0 +1,14 @@
+<Canvas Name="Layer_1" ClipToBounds="True" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="81" Height="100">
+    <Canvas Name="ipad_2_" Width="81" Height="100">
+        <Path Fill="White" Height="100" Stretch="Fill" Width="81">
+            <Path.Data>
+                <PathGeometry FillRule="Nonzero" Figures="M60,0L6,0C2.7,0,0,2.7,0,6L0,75C0,78.3,2.7,81,6,81L60,81C63.3,81,66,78.3,66,75L66,6C66,2.7,63.3,0,60,0z M33,80C31.1,80 29.5,78.4 29.5,76.5 29.5,74.6 31.1,73 33,73 34.9,73 36.5,74.6 36.5,76.5 36.5,78.4 34.9,80 33,80z M57,72L9.1,72 9,72 9,9 57,9 57,72z" />
+            </Path.Data>
+        </Path>
+        <Path Fill="#4CFFFFFF" Opacity="0.3" Height="90" Stretch="Fill" Width="71">
+            <Path.Data>
+                <PathGeometry FillRule="Nonzero" Figures="M57,72L9.1,72 9,72 9,9 57,9z" />
+            </Path.Data>
+        </Path>
+    </Canvas>
+</Canvas>

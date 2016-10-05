@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="ScoreKeeper.Controls.DisplaysIcon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ScoreKeeper.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100" Background="CornflowerBlue">
+    <Canvas Height="100" ClipToBounds="True">
+                <Path Fill="#FFFFFFFF">
+                    <Path.Data>
+                        <PathGeometry FillRule="Nonzero" Figures="M33,10L15,10C13.9,10,13,10.9,13,12L13,35C13,36.1,13.9,37,15,37L33,37C34.1,37,35,36.1,35,35L35,12C35,10.9,34.1,10,33,10z M24,36.675C23.351,36.675 22.825,36.149 22.825,35.5 22.825,34.851 23.351,34.325 24,34.325 24.649,34.325 25.175,34.851 25.175,35.5 25.175,36.149 24.649,36.675 24,36.675z M32,34L16.027,34 16,34 16,13 32,13 32,34z" />
+                    </Path.Data>
+                </Path>
+                <Path Fill="#4CFFFFFF" Margin="0,0,3,3">
+                    <Path.Data>
+                        <PathGeometry FillRule="Nonzero" Figures="M32,34L16.027,34 16,34 16,13 32,13z" />
+                    </Path.Data>
+                </Path>
+    </Canvas>
+
+</UserControl>
