@@ -8,7 +8,23 @@
         mc:Ignorable="d"
         Title="GoalWindow" Height="768" Width="1024" WindowStyle="None">
     <Grid>
-        <controls:GoalView></controls:GoalView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+        </Grid.ColumnDefinitions>
+        
+        <controls:GoalView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2"></controls:GoalView>
+        <Button Grid.Row="0" Grid.Column="1" Content="X" Style="{StaticResource CloseButtonStyle}" Click="Button_Click">
+        </Button>
+        
+        <StackPanel Name="BlackoutPanel" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="Black" Visibility="Collapsed"></StackPanel>
+        <StackPanel Name="WhiteoutPanel" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="White" Visibility="Collapsed"></StackPanel>
     </Grid>
 </Window>
+
+
 

@@ -114,6 +114,7 @@
     <Compile Include="Windows\GoalWindow.xaml.cs">
       <DependentUpon>GoalWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\InvertBooleanConverter.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

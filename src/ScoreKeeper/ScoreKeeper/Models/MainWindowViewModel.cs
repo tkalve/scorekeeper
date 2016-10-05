@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,7 +14,10 @@ namespace ScoreKeeper.Models
         private GameModel _game;
         private bool _webServerEnabled;
         private string _webServerUrl;
+        private string _webServerStatus;
 
+        private bool _networkBroadcastEnabled;
+        private string _networkBroadcastLog;
 
         public GameModel Game
         {
@@ -41,6 +45,36 @@ namespace ScoreKeeper.Models
             set
             {
                 _webServerUrl = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string WebServerStatus
+        {
+            get { return _webServerStatus; }
+            set
+            {
+                _webServerStatus = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool NetworkBroadcastEnabled
+        {
+            get { return _networkBroadcastEnabled; }
+            set
+            {
+                _networkBroadcastEnabled = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NetworkBroadcastLog
+        {
+            get { return _networkBroadcastLog; }
+            set
+            {
+                _networkBroadcastLog = value;
                 NotifyPropertyChanged();
             }
         }

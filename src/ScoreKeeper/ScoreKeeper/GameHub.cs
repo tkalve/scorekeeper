@@ -13,5 +13,8 @@ namespace ScoreKeeper
         }
 
         public GameModel CurrentGame { get; set; }
+        public bool Whiteout { get; set; }
+        public bool Blackout { get; set; }
+
     }
 }
