@@ -9,8 +9,19 @@ using System.Windows.Threading;
 
 namespace ScoreKeeper.Models
 {
-    public class GameModel : INotifyPropertyChanged
+    public class Game : INotifyPropertyChanged
     {
+        public Game ()
+        {
+            _rounds = 2;
+            _currentRound = 1;
+            _blueTeamGoals = 0;
+            _whiteTeamGoals = 0;
+            _timeLeft = new TimeSpan(0, 8, 0);
+        }
+
+        private int? _id;
+
         private string _blueTeamName;
         private string _whiteTeamName;
 
@@ -18,9 +29,21 @@ namespace ScoreKeeper.Models
         private int _whiteTeamGoals;
 
         private int _rounds;
-        private int _currentRound;
+        private int? _currentRound;
+
+        private string _extra;
 
         private TimeSpan _timeLeft;
+
+        public int? Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public string BlueTeamName
         {
@@ -78,12 +101,22 @@ namespace ScoreKeeper.Models
             }
         }
 
-        public int CurrentRound
+        public int? CurrentRound
         {
             get { return _currentRound; }
             set
             {
                 _currentRound = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Extra
+        {
+            get { return _extra; }
+            set
+            {
+                _extra = value;
                 NotifyPropertyChanged();
             }
         }

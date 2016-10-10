@@ -16,6 +16,15 @@ namespace ScoreKeeper.Controls
         private void GoalView_OnLoaded(object sender, RoutedEventArgs e)
         {
             DataContext = GameHub.Instance.CurrentGame;
+            GameHub.Instance.PropertyChanged += Instance_PropertyChanged;
+        }
+
+        private void Instance_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CurrentGame")
+            {
+                DataContext = GameHub.Instance.CurrentGame;
+            }
         }
     }
 }

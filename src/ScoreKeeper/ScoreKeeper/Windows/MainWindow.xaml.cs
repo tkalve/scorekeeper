@@ -18,6 +18,7 @@ using ScoreKeeper.Hubs;
 using ScoreKeeper.Models;
 using ScoreKeeper.Properties;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace ScoreKeeper.Windows
 {
@@ -33,22 +34,40 @@ namespace ScoreKeeper.Windows
         {
             InitializeComponent();
 
-            // Add a game
-            GameHub.Instance.CurrentGame = new GameModel()
-            {
-                WhiteTeamName = "NOR",
-                BlueTeamName = "SWE",
-                Rounds = 2,
-                CurrentRound = 1,
-                WhiteTeamGoals = 25,
-                BlueTeamGoals = 2,
-                TimeLeft = new TimeSpan(0, 8, 0)
-            };
+            Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+            
+            DataContext = GameHub.Instance;
 
-            DataContext = new MainViewModel();
-            ((MainViewModel)DataContext).Game = GameHub.Instance.CurrentGame;
+            // Add games
+            int i = 0;
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
+            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
 
-            ((MainViewModel)DataContext).PropertyChanged += MainViewModel_PropertyChanged;
+            GamesListView.SelectedIndex = 0;
+
+            GameHub.Instance.PropertyChanged += MainViewModel_PropertyChanged;
 
             // Initialize the timer
             _timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
@@ -56,8 +75,8 @@ namespace ScoreKeeper.Windows
                 // Stop timer if time is out
                 // TODO: Show something graphically?
                 if (GameHub.Instance.CurrentGame.TimeLeft == TimeSpan.Zero) _timer.Stop();
-
-                // Remove a second from the timer
+                
+                // Remove a second from the timer0
                 GameHub.Instance.CurrentGame.TimeLeft = GameHub.Instance.CurrentGame.TimeLeft.Add(TimeSpan.FromSeconds(-1));
 
                 // Update hub if enabled
@@ -77,7 +96,7 @@ namespace ScoreKeeper.Windows
             }
         }
 
-        public Windows.GoalWindow GoalWindow;
+        public GoalWindow GoalWindow;
         
         private readonly DispatcherTimer _timer;
         private IDisposable _webServerDisposable;
@@ -95,15 +114,15 @@ namespace ScoreKeeper.Windows
 
                 UpdateHub();
 
-                ((MainViewModel) DataContext).WebServerEnabled = true;
-                ((MainViewModel) DataContext).WebServerUrl = url;
-                ((MainViewModel)DataContext).WebServerStatus = "Webserver running.";
+                GameHub.Instance.WebServerEnabled = true;
+                GameHub.Instance.WebServerUrl = url;
+                GameHub.Instance.WebServerStatus = "Webserver running.";
             }
             catch (Exception ex)
             {
-                ((MainViewModel)DataContext).WebServerEnabled = false;
-                ((MainViewModel)DataContext).WebServerUrl = "";
-                ((MainViewModel)DataContext).WebServerStatus = "Unable to start webserver: " + ex.Message;
+                GameHub.Instance.WebServerEnabled = false;
+                GameHub.Instance.WebServerUrl = "";
+                GameHub.Instance.WebServerStatus = "Unable to start webserver: " + ex.Message;
             }
         }
 
@@ -111,9 +130,9 @@ namespace ScoreKeeper.Windows
         {
             _webServerDisposable?.Dispose();
 
-            ((MainViewModel)DataContext).WebServerEnabled = false;
-            ((MainViewModel)DataContext).WebServerStatus = "Webserver stopped.";
-            ((MainViewModel)DataContext).WebServerUrl = "";
+            GameHub.Instance.WebServerEnabled = false;
+            GameHub.Instance.WebServerStatus = "Webserver stopped.";
+            GameHub.Instance.WebServerUrl = "";
         }
 
         private void BroadcastTimerCallback()
@@ -126,7 +145,7 @@ namespace ScoreKeeper.Windows
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                ((MainViewModel) DataContext).NetworkBroadcastLog += ("Sent " + data.Length + " bytes to " + endpoint + "\n");
+                GameHub.Instance.NetworkBroadcastLog += ("Sent " + data.Length + " bytes to " + endpoint + "\n");
             }));
         }
 
@@ -136,21 +155,21 @@ namespace ScoreKeeper.Windows
             BroadcastTimer = new Timer(_ => BroadcastTimerCallback(), null, 0, 1000);
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                ((MainViewModel)DataContext).NetworkBroadcastLog += ("Broadcast started.\n");
+                GameHub.Instance.NetworkBroadcastLog += ("Broadcast started.\n");
             }));
-            ((MainViewModel)DataContext).NetworkBroadcastEnabled = true;
+            GameHub.Instance.NetworkBroadcastEnabled = true;
         }
 
         private void DisableBroadcast()
         {
-            ((MainViewModel)DataContext).NetworkBroadcastEnabled = false;
+            GameHub.Instance.NetworkBroadcastEnabled = false;
             if (BroadcastTimer != null)
             {
                 BroadcastTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 BroadcastClient.Dispose();
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    ((MainViewModel)DataContext).NetworkBroadcastLog += ("Broadcast stopped.\n");
+                    GameHub.Instance.NetworkBroadcastLog += ("Broadcast stopped.\n");
                 }));
             }
         }
@@ -178,27 +197,23 @@ namespace ScoreKeeper.Windows
             VersionMinorLabel.Content = $".{version.Build}.{version.Revision}";
         }
 
-        private void ShowScoresButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            //var screen = DisplaysComboBox.SelectedItem as Screen;
-            //if (screen != null)
-            //{
-            //    GoalWindow?.Close();
-
-            //    GoalWindow = new GoalWindow();
-            //    GoalWindow.Show();
-            //    GoalWindow.MaximizeTo(screen);
-            //}
-        }
-
         private void StartTimerButton_OnClick(object sender, RoutedEventArgs e)
         {
             _timer.Start();
+            TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
         }
 
         private void StopTimerButton_OnClick(object sender, RoutedEventArgs e)
         {
             _timer.Stop();
+            TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+        }
+
+        private void ResetTimerbutton_Click(object sender, RoutedEventArgs e)
+        {
+            _timer.Stop();
+            GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, 8, 0);
+            TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
         }
 
         private void VersionLabel_OnMouseEnter(object sender, MouseEventArgs e)
@@ -245,13 +260,30 @@ namespace ScoreKeeper.Windows
             );
         }
 
+        private void GamesListButton_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonExtensions.SetActive(GamesListButton, true);
+            ButtonExtensions.SetActive(PreviewButton, false);
+            ButtonExtensions.SetActive(ExternalDisplayButton, false);
+            ButtonExtensions.SetActive(NetworkBroadcastButton, false);
+            ButtonExtensions.SetActive(WebControlButton, false);
+
+            GamesTab.Visibility = Visibility.Visible;
+            PreviewTab.Visibility = Visibility.Collapsed;
+            ExternalDisplayTab.Visibility = Visibility.Collapsed;
+            NetworkBroadcastTab.Visibility = Visibility.Collapsed;
+            WebControlTab.Visibility = Visibility.Collapsed;
+        }
+
         private void PreviewButton_OnClick(object sender, RoutedEventArgs e)
         {
+            ButtonExtensions.SetActive(GamesListButton, false);
             ButtonExtensions.SetActive(PreviewButton, true);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
             ButtonExtensions.SetActive(NetworkBroadcastButton, false);
             ButtonExtensions.SetActive(WebControlButton, false);
 
+            GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Visible;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
             NetworkBroadcastTab.Visibility = Visibility.Collapsed;
@@ -259,12 +291,13 @@ namespace ScoreKeeper.Windows
         }
         private void ExternalDisplayButton_OnClick(object sender, RoutedEventArgs e)
         {
+            ButtonExtensions.SetActive(GamesListButton, false);
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, true);
             ButtonExtensions.SetActive(NetworkBroadcastButton, false);
             ButtonExtensions.SetActive(WebControlButton, false);
 
-
+            GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Visible;
             NetworkBroadcastTab.Visibility = Visibility.Collapsed;
@@ -272,12 +305,13 @@ namespace ScoreKeeper.Windows
         }
         private void NetworkBroadcastButton_OnClick(object sender, RoutedEventArgs e)
         {
+            ButtonExtensions.SetActive(GamesListButton, false);
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
             ButtonExtensions.SetActive(NetworkBroadcastButton, true);
             ButtonExtensions.SetActive(WebControlButton, false);
 
-
+            GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
             NetworkBroadcastTab.Visibility = Visibility.Visible;
@@ -285,11 +319,13 @@ namespace ScoreKeeper.Windows
         }
         private void WebControlButton_OnClick(object sender, RoutedEventArgs e)
         {
+            ButtonExtensions.SetActive(GamesListButton, false);
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
             ButtonExtensions.SetActive(NetworkBroadcastButton, false);
             ButtonExtensions.SetActive(WebControlButton, true);
 
+            GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
             NetworkBroadcastTab.Visibility = Visibility.Collapsed;
@@ -368,6 +404,83 @@ namespace ScoreKeeper.Windows
         private void DisableWebServerButton_OnClick(object sender, RoutedEventArgs e)
         {
             DisableWebserver();
+        }
+
+        private void BlueUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (GameHub.Instance.CurrentGame.BlueTeamGoals >= 0)
+                GameHub.Instance.CurrentGame.BlueTeamGoals++;
+            else if (GameHub.Instance.CurrentGame.BlueTeamGoals < 0)
+                GameHub.Instance.CurrentGame.BlueTeamGoals = 0;
+
+            UpdateHubScore();
+        }
+
+        private void BlueDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (GameHub.Instance.CurrentGame.BlueTeamGoals > 0)
+                GameHub.Instance.CurrentGame.BlueTeamGoals--;
+            else if (GameHub.Instance.CurrentGame.BlueTeamGoals < 0)
+                GameHub.Instance.CurrentGame.BlueTeamGoals = 0;
+
+            UpdateHubScore();
+        }
+
+        private void WhiteUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (GameHub.Instance.CurrentGame.WhiteTeamGoals >= 0)
+                GameHub.Instance.CurrentGame.WhiteTeamGoals++;
+            else if (GameHub.Instance.CurrentGame.WhiteTeamGoals < 0)
+                GameHub.Instance.CurrentGame.WhiteTeamGoals = 0;
+
+            UpdateHubScore();
+        }
+
+        private void WhiteDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (GameHub.Instance.CurrentGame.WhiteTeamGoals > 0)
+                GameHub.Instance.CurrentGame.WhiteTeamGoals--;
+            else if (GameHub.Instance.CurrentGame.WhiteTeamGoals < 0)
+                GameHub.Instance.CurrentGame.WhiteTeamGoals = 0;
+
+            UpdateHubScore();
+        }
+
+        private void Round1Button_Click(object sender, RoutedEventArgs e)
+        {
+            GameHub.Instance.CurrentGame.CurrentRound = 1;
+            GameHub.Instance.CurrentGame.Extra = "";
+            Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+            Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 128,128,128));
+            SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+        }
+
+        private void Round2Button_Click(object sender, RoutedEventArgs e)
+        {
+            GameHub.Instance.CurrentGame.CurrentRound = 2;
+            GameHub.Instance.CurrentGame.Extra = "";
+            Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+            Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+            SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+        }
+        private void SuddenDeathButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameHub.Instance.CurrentGame.CurrentRound = null;
+            GameHub.Instance.CurrentGame.Extra = "SD";
+            Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+            Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 127, 128));
+            SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+        }
+
+        private void ResetScoreButton_Click(object sender, RoutedEventArgs e)
+        {
+            GameHub.Instance.CurrentGame.BlueTeamGoals = 0;
+            GameHub.Instance.CurrentGame.WhiteTeamGoals = 0;
+        }
+
+        private void GamesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GameHub.Instance.CurrentGame = GamesListView.SelectedItem as Game;
         }
     }
 

@@ -7,12 +7,12 @@
         xmlns:controls="clr-namespace:ScoreKeeper.Controls"
         xmlns:windows="clr-namespace:ScoreKeeper.Windows"
         mc:Ignorable="d"
-        Title="ScoreKeeper" Height="521" Width="1080"
-        Loaded="MainWindow_OnLoaded" Background="#F0F0F0">
+        Title="ScoreKeeper" Height="650" Width="1080"
+        Loaded="MainWindow_OnLoaded" Background="#404040">
 
     <Window.Resources>
         <Style TargetType="Button">
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="10"/>
             <Setter Property="BorderThickness" Value="0"></Setter>
             <Setter Property="Background" Value="#404040"></Setter>
             <Setter Property="Foreground" Value="White"></Setter>
@@ -22,18 +22,45 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="5" Margin="{TemplateBinding Margin}" Background="{TemplateBinding Background}">
+                        <Border CornerRadius="5" Background="{TemplateBinding Background}">
                             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="Button" x:Key="BlueScoreButton">
+            <Setter Property="Margin" Value="10 10 10 0" />
+            <Setter Property="FontWeight" Value="Bold"></Setter>
+            <Setter Property="FontSize" Value="40"></Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+            <Setter Property="Padding" Value="0 0"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Stretch"></Setter>
+            <Setter Property="VerticalAlignment" Value="Stretch"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Background" Value="SteelBlue"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="5" Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="WhiteScoreButton" BasedOn="{StaticResource BlueScoreButton}">
+            <Setter Property="Background" Value="LightGray"></Setter>
+            <Setter Property="Foreground" Value="#202020"></Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -54,7 +81,23 @@
                 </TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button windows:ButtonExtensions.Active="true" Style="{DynamicResource IconButtonStyle}" ToolTip="Preview" Name="PreviewButton" Click="PreviewButton_OnClick">
+                <Button windows:ButtonExtensions.Active="true" Style="{DynamicResource IconButtonStyle}" ToolTip="Games list" Name="GamesListButton" Click="GamesListButton_Click">
+                    <Viewbox>
+                        <Canvas Width="81" Height="100">
+                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Height="100" Stretch="Fill" Width="81">
+                                <Path.Data>
+                                    <PathGeometry FillRule="Nonzero" Figures="M60,0L6,0C2.7,0,0,2.7,0,6L0,75C0,78.3,2.7,81,6,81L60,81C63.3,81,66,78.3,66,75L66,6C66,2.7,63.3,0,60,0z M33,80C31.1,80 29.5,78.4 29.5,76.5 29.5,74.6 31.1,73 33,73 34.9,73 36.5,74.6 36.5,76.5 36.5,78.4 34.9,80 33,80z M57,72L9.1,72 9,72 9,9 57,9 57,72z" />
+                                </Path.Data>
+                            </Path>
+                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Opacity="0.1" Height="90" Stretch="Fill" Width="71">
+                                <Path.Data>
+                                    <PathGeometry FillRule="Nonzero" Figures="M57,72L9.1,72 9,72 9,9 57,9z" />
+                                </Path.Data>
+                            </Path>
+                        </Canvas>
+                    </Viewbox>
+                </Button >
+                <Button windows:ButtonExtensions.Active="false" Style="{DynamicResource IconButtonStyle}" ToolTip="Preview" Name="PreviewButton" Click="PreviewButton_OnClick">
                     <Viewbox>
                         <Canvas Width="81" Height="100">
                             <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Height="100" Stretch="Fill" Width="81">
@@ -107,12 +150,89 @@
             </StackPanel>
         </DockPanel>
 
-        <Grid Name="PreviewTab" Grid.Row="1" Grid.Column="1" Background="#F0F0F0">
-        <Viewbox>
-            <controls:GoalView Height="600" Width="800" Background="#F0F0F0"></controls:GoalView>
-        </Viewbox>
+        <Grid Name="GamesTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Visibility="Visible">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Margin="20 20 20 10" Content="Games" FontSize="28" FontWeight="Bold" Foreground="White" Padding="0"></Label>
+            <TextBlock Grid.Row="1" Margin="20 0 20 0" Foreground="#c0c0c0" FontSize="12" TextWrapping="Wrap">Add list of games and select in the list to set active game.</TextBlock>
+
+            <ListView Grid.Row="2" Margin="20 10 20 20" ItemsSource="{Binding Games}" Name="GamesListView" SelectionChanged="GamesListView_SelectionChanged" BorderThickness="0" Background="Transparent">
+                <ListView.Resources>
+                    <ControlTemplate x:Key="SelectedTemplate" TargetType="ListViewItem">
+                        <Border Background="SteelBlue" Margin="0 0 10 10">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="#80FFFFFF">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}#{0}">
+                                            <Binding Path="Id" FallbackValue="0" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="White">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                            <Binding Path="BlueTeamName" FallbackValue="BLUE" />
+                                            <Binding Path="WhiteTeamName" FallbackValue="WHITE" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+                    </ControlTemplate>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border Background="#303030" Margin="0 0 10 10">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="#80FFFFFF">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}#{0}">
+                                                        <Binding Path="Id" FallbackValue="0" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="White">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} - {1}">
+                                                        <Binding Path="BlueTeamName" FallbackValue="BLUE" />
+                                                        <Binding Path="WhiteTeamName" FallbackValue="WHITE" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="true" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Template" Value="{StaticResource SelectedTemplate}" />
+                            </MultiTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.Resources>
+            </ListView>
         </Grid>
-        <Grid Name="ExternalDisplayTab" Grid.Row="1" Grid.Column="1" Background="#404040" Visibility="Collapsed">
+        <Grid Name="PreviewTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Margin="15 15 15 0" CornerRadius="15" Background="#F0F0F0">
+                <Viewbox>
+                    <controls:GoalView Height="600" Width="800"></controls:GoalView>
+                </Viewbox>
+            </Border>
+            <StackPanel Grid.Row="1"></StackPanel>
+        </Grid>
+        <Grid Name="ExternalDisplayTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">
             <StackPanel Margin="20">
                 <Label Content="Available displays" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
                 <ItemsControl Name="DisplaysItemsControl" Margin="0">
@@ -145,7 +265,7 @@
             </StackPanel>
 
         </Grid>
-        <Grid Name="NetworkBroadcastTab" Grid.Row="1" Grid.Column="1" Background="#404040" Visibility="Visible">
+        <Grid Name="NetworkBroadcastTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">
             <StackPanel Margin="20">
                 <Label Content="Network broadcast" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
                 <TextBlock Foreground="#c0c0c0" Margin="0 0 0 0" FontSize="12" TextWrapping="Wrap">Enable or disable network broadcast. Network broadcast needs to be enabled to use an external scoreboard or scorehub.</TextBlock>
@@ -156,10 +276,10 @@
                 <TextBlock Text="{Binding NetworkBroadcastLog}" TextWrapping="Wrap"></TextBlock>
             </StackPanel>
         </Grid>
-        <Grid Name="WebControlTab" Grid.Row="1" Grid.Column="1" Background="#404040" Visibility="Collapsed">
+        <Grid Name="WebControlTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">
             <StackPanel Margin="20">
-                <Label Content="Network broadcast" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
-                <TextBlock Foreground="#c0c0c0" Margin="0 0 0 0" FontSize="12" TextWrapping="Wrap">Enable or disable network broadcast. Network broadcast needs to be enabled to use an external scoreboard or scorehub.</TextBlock>
+                <Label Content="Web control" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
+                <TextBlock Foreground="#c0c0c0" Margin="0 0 0 0" FontSize="12" TextWrapping="Wrap">Enable or disable web control. When enabled, access the URL from a mobile device or web browser to control remotely. [NOT READY]</TextBlock>
                 <StackPanel Orientation="Horizontal">
                     <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding WebServerEnabled, Converter={StaticResource boolConvert}}" Content="Enable" Name="EnableWebServerButton" Click="EnableWebServerButton_OnClick"></Button>
                     <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding WebServerEnabled}" Content="Disable" Name="DisableWebServerButton" Click="DisableWebServerButton_OnClick"></Button>
@@ -169,35 +289,126 @@
             </StackPanel>
         </Grid>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Background="White">
+        <Border Grid.Row="1" Grid.Column="0" Background="#303030">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
 
-            <Grid Margin="5">
+                <Viewbox Grid.Row="0" Grid.Column="1" Margin="30 10">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                        <TextBlock FontWeight="Bold" Margin="10 0 0 0" FontSize="45" Foreground="#808080">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}#{0}">
+                                    <Binding Path="CurrentGame.Id" FallbackValue="0" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock FontWeight="Bold" Margin="20 0 0 0" FontSize="45" Foreground="#c0c0c0">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} - {1}">
+                                <Binding Path="CurrentGame.BlueTeamName" FallbackValue="BLUE" />
+                                <Binding Path="CurrentGame.WhiteTeamName" FallbackValue="WHITE" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    </StackPanel>
+                </Viewbox>
+            </Grid>
+        </Border>
+        <Border Grid.Row="2" Grid.Column="0" Background="#F0F0F0"  CornerRadius="0">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
-
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="8*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" FontSize="22" FontWeight="Bold" Background="White">Timer</Label>
-                <Button Name="StartTimerButton" Click="StartTimerButton_OnClick" Grid.Row="1" Grid.Column="0">Start</Button>
-                <Button Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="1" Grid.Column="1">Stop</Button>
-                <Button Name="ResetTimerbutton" Grid.Row="1" Grid.Column="2">Reset</Button>
+                <TextBlock Margin="0 15" Grid.Row="0" Grid.RowSpan="6"  Grid.Column="0" Grid.ColumnSpan="1" FontSize="32" Foreground="#C0C0C0" FontWeight="Bold" Text="TIMER" VerticalAlignment="Top">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="-90" />
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+                <Button Margin="10 10 10 5"  Name="StartTimerButton" Click="StartTimerButton_OnClick" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1">Start</Button>
+                <Button Margin="10 5 10 10" Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="3" Grid.RowSpan="3" Grid.Column="1">Stop</Button>
+                <Button Background="#808080" FontSize="25" Padding="0" Margin="10 10 10 7"  Name="Round1Button" Click="Round1Button_Click" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2">1</Button>
+                <Button Background="#808080" FontSize="25" Padding="0" Margin="10 8 10 7" Name="Round2Button" Click="Round2Button_Click" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2">2</Button>
+                <Button Background="#808080" FontSize="20" Padding="0" Margin="10 8 10 10" Name="SuddenDeathButton" Click="SuddenDeathButton_Click" Grid.Row="4" Grid.RowSpan="2" Grid.Column="2">SD</Button>
+                <Button Name="ResetTimerbutton" Click="ResetTimerbutton_Click" Content="RESET" Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Background="#FFC71A1A">
+                    <Button.LayoutTransform>
+                        <RotateTransform Angle="-90" />
+                    </Button.LayoutTransform>
+                </Button>
 
+                <Viewbox Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="1" Grid.RowSpan="6" Margin="20">
+                    <TextBlock Name="TimerClock" Foreground="#808080" FontWeight="Bold" FontSize="80" HorizontalAlignment="Center"  VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}:{1:00}">
+                                <Binding Path="CurrentGame.TimeLeft.Minutes" FallbackValue="15" />
+                                <Binding Path="CurrentGame.TimeLeft.Seconds" FallbackValue="00" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Viewbox>
             </Grid>
+        </Border>
 
+        <Border Grid.Row="3" Grid.Column="0" Background="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="7*"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
 
+                <TextBlock Margin="0 15" Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" Grid.ColumnSpan="1" FontSize="32" Foreground="#C0C0C0" FontWeight="Bold" Text="SCORE" VerticalAlignment="Top">
+                    <TextBlock.LayoutTransform>
+                        <RotateTransform Angle="-90" />
+                    </TextBlock.LayoutTransform>
+                </TextBlock>
+                <Button Content="RESET" Name="ResetScoreButton" Click="ResetScoreButton_Click" Grid.Row="0" Grid.RowSpan="2" Grid.Column="4" Background="#FFC71A1A">
+                    <Button.LayoutTransform>
+                        <RotateTransform Angle="-90" />
+                    </Button.LayoutTransform>
+                </Button>
+                <Button Margin="10 10 10 5" Style="{StaticResource BlueScoreButton}" Name="BlueUpButton" Click="BlueUpButton_Click"  Grid.Row="0" Grid.Column="1">+</Button>
+                <Button Margin="10 5 10 10" Style="{StaticResource BlueScoreButton}" Name="BlueDownButton" Click="BlueDownButton_Click" Grid.Row="1" Grid.Column="1">-</Button>
+                <Button Margin="10 10 10 5" Style="{StaticResource WhiteScoreButton}" Name="WhiteUpButton" Click="WhiteUpButton_Click" Grid.Row="0" Grid.Column="3">+</Button>
+                <Button Margin="10 5 10 10" Style="{StaticResource WhiteScoreButton}" Name="WhiteDownButton" Click="WhiteDownButton_Click" Grid.Row="1" Grid.Column="3">-</Button>
 
-            <TextBlock Text="{Binding WebServerUrl}"></TextBlock>
-        </StackPanel>
-        
+                <Viewbox Grid.Row="0" Grid.Column="2" Grid.RowSpan="2" Margin="20">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="80" FontWeight="Bold">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}-{1}">
+                            <Binding Path="CurrentGame.BlueTeamGoals" FallbackValue="0" />
+                            <Binding Path="CurrentGame.WhiteTeamGoals" FallbackValue="0" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                </Viewbox>
+            </Grid>
+        </Border>
+
     </Grid>
 
 </Window>
-

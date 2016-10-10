@@ -8,6 +8,8 @@
     <style type="text/css">
         body {
             margin: 0;
+            font-family: Calibri, sans-serif;
+            font-weight: bold;
         }
         body, html, section {
              height: 100%;
@@ -26,10 +28,10 @@
         }
         div.row > div {
             display: flex;
+            align-items: center;
             flex-direction: row;
             height: 100%;
             justify-content: center;
-            background: blue;
         }
         div.row > div > div {
             flex: 1;
@@ -37,6 +39,15 @@
             margin-left: 5px;
             margin-right: 5px;
             justify-content: center;
+        }
+        .teamName {
+        	font-size: 50px;
+        }
+        .score {
+        	font-size: 70px;
+        }
+        .clock {
+            font-size: 75px;
         }
     </style>
 
@@ -50,77 +61,54 @@
     <!-- ReSharper restore Html.PathError -->
 
     <script type="text/javascript">
-        //$(function () {
+        $(function () {
 
-        //    var chat = $.connection.scoreHub;
+            var chat = $.connection.scoreHub;
 
-        //    chat.client.update = function (blueTeamName, whiteTeamName, blueTeamGoals, whiteTeamGoals, time, round) {
-        //        $('#blueTeamName').html(blueTeamName);
-        //        $('#whiteTeamName').html(whiteTeamName);
-        //        $('#blueTeamGoals').html(blueTeamGoals);
-        //        $('#whiteTeamGoals').html(whiteTeamGoals);
-        //        $('#clock').html(time);
-        //        $('#round').html(round);
-        //    }
-        //    chat.client.updateClock = function (time, round) {
-        //        $('#clock').html(time);
-        //        $('#round').htmlFor(round);
-        //    }
-        //    chat.client.updateScore = function(blueTeamGoals, whiteTeamGoals) {
-        //        $('#blueTeamGoals').html(blueTeamGoals);
-        //        $('#whiteTeamGoals').html(whiteTeamGoals);
-        //    }
-
-        //    $.connection.hub.start().done(function () {
-        //    });
-        //});
-
-
-        ; (function ($) {
-            $.fn.textfill = function (options) {
-                var fontSize = options.maxFontPixels;
-                var ourText = $('span:visible:first', this);
-                var maxHeight = $(this).height();
-                var maxWidth = $(this).width();
-                var textHeight;
-                var textWidth;
-                do {
-                    ourText.css('font-size', fontSize);
-                    textHeight = ourText.height();
-                    textWidth = ourText.width();
-                    fontSize = fontSize - 1;
-                } while ((textHeight > maxHeight || textWidth > maxWidth) && fontSize > 3);
-                return this;
+            chat.client.update = function (blueTeamName, whiteTeamName, blueTeamGoals, whiteTeamGoals, time, round) {
+                $('#blueTeamName').html(blueTeamName);
+                $('#whiteTeamName').html(whiteTeamName);
+                $('#blueTeamGoals').html(blueTeamGoals);
+                $('#whiteTeamGoals').html(whiteTeamGoals);
+                $('#clock').html(time);
+                $('#round').html(round);
             }
-        })(jQuery);
+            chat.client.updateClock = function (time, round) {
+                $('#clock').html(time);
+                $('#round').htmlFor(round);
+            }
+            chat.client.updateScore = function(blueTeamGoals, whiteTeamGoals) {
+                $('#blueTeamGoals').html(blueTeamGoals);
+                $('#whiteTeamGoals').html(whiteTeamGoals);
+            }
 
-        $(document).ready(function () {
-            $('div.row > div > div').textfill({ maxFontPixels: 120 });
+            $.connection.hub.start().done(function () {
+            });
         });
     </script>
 
     <section>
         <div class="row">
             <div>
-                <div><span id="blueTeamName">NOR</span></div>
-                <div><span id="blueTeamGoals">10</span>-<span id="whiteTeamGoals">10</span></div>
-                <div><span id="whiteTeamName">NOR</span></div>
+                <div class="teamName"><span id="blueTeamName">NOR</span></div>
+                <div class="score"><span id="blueTeamGoals">10</span>-<span id="whiteTeamGoals">10</span></div>
+                <div class="teamName"><span id="whiteTeamName">NOR</span></div>
             </div>
         </div>
         <div class="row shrink">
             <div>
                 <div>
-                    <div style="background: #4682b4; height: 2rem;"></div>
+                    <div style="background: #4682b4; height: 1rem;"></div>
                 </div>
                 <div></div>
                 <div>
-                    <div style="background: #c0c0c0; height: 2rem;"></div>
+                    <div style="background: #c0c0c0; height: 1rem;"></div>
                 </div>
             </div>
         </div>
         <div class="row">
             <div>
-                <div><span id="clock">8:00</span></div>
+                <div class="clock"><span id="clock">8:00</span></div>
             </div>
         </div>
     </section>

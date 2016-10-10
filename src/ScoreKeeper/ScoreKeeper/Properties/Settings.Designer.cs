@@ -49,6 +49,18 @@ namespace ScoreKeeper.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string WebServerIp {
+            get {
+                return ((string)(this["WebServerIp"]));
+            }
+            set {
+                this["WebServerIp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9000")]
         public int WebServerPort {
             get {
@@ -56,18 +68,6 @@ namespace ScoreKeeper.Properties {
             }
             set {
                 this["WebServerPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
-        public string WebServerIp {
-            get {
-                return ((string)(this["WebServerIp"]));
-            }
-            set {
-                this["WebServerIp"] = value;
             }
         }
     }
