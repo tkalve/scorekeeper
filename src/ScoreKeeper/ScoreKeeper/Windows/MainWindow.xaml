@@ -69,12 +69,12 @@
 
         <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="SteelBlue">
             <StackPanel Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="25 15 25 0">
+                <StackPanel Orientation="Horizontal" Margin="25 26 25 0">
                     <Label FontSize="26" Foreground="White" FontWeight="Bold" Margin="0 0 15 0" Padding="0">ScoreKeeper</Label>
                     <Label FontSize="26" Foreground="#80FFFFFF" FontWeight="Bold" Margin="0" Padding="0" Name="VersionLabel" MouseEnter="VersionLabel_OnMouseEnter" MouseLeave="VersionLabel_OnMouseLeave">*.*</Label>
                     <Label FontSize="26" Foreground="#20FFFFFF" FontWeight="Bold" Margin="0" Padding="0" Name="VersionMinorLabel" Visibility="Hidden">.*.*</Label>
                 </StackPanel>
-                <TextBlock Margin="25 0 25 15" FontSize="14" Foreground="#80FFFFFF">           
+                <TextBlock Visibility="Hidden" Margin="25 0 25 15" FontSize="14" Foreground="#80FFFFFF">           
                 <Hyperlink NavigateUri="https://tkalve.github.io/scorekeeper" RequestNavigate="Hyperlink_RequestNavigate" TextDecorations="None" Foreground="#80FFFFFF">
                     https://tkalve.github.io/scorekeeper
                 </Hyperlink>
@@ -131,7 +131,7 @@
                         </Canvas>
                     </Viewbox>
                 </Button>
-                <Button Style="{DynamicResource IconButtonStyle}" ToolTip="Web control" Name="WebControlButton" Click="WebControlButton_OnClick">
+                <Button Visibility="Collapsed" Style="{DynamicResource IconButtonStyle}" ToolTip="Web control" Name="WebControlButton" Click="WebControlButton_OnClick">
                     <Viewbox>
                         <Canvas Width="81" Height="100">
                             <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Height="100" Stretch="Fill" Width="81">
