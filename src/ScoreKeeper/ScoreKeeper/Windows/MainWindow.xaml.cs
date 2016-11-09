@@ -140,7 +140,7 @@ namespace ScoreKeeper.Windows
 
             var gd = JsonConvert.SerializeObject(GameHub.Instance.CurrentGame);
             var data = Encoding.ASCII.GetBytes(gd);
-            var endpoint = new IPEndPoint(IPAddress.Any, 0);
+            var endpoint = new IPEndPoint(IPAddress.Broadcast, 8888);
             BroadcastClient?.SendAsync(data, data.Length, endpoint);
 
             Dispatcher.BeginInvoke(new Action(() =>
@@ -151,7 +151,9 @@ namespace ScoreKeeper.Windows
 
         private void EnableBroadcast()
         {
-            BroadcastClient = new UdpClient(8888);
+            BroadcastClient = new UdpClient();
+            BroadcastClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
             BroadcastTimer = new Timer(_ => BroadcastTimerCallback(), null, 0, 1000);
             Dispatcher.BeginInvoke(new Action(() =>
             {
@@ -162,11 +164,12 @@ namespace ScoreKeeper.Windows
 
         private void DisableBroadcast()
         {
+            BroadcastClient?.Dispose();
+
             GameHub.Instance.NetworkBroadcastEnabled = false;
             if (BroadcastTimer != null)
             {
                 BroadcastTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                BroadcastClient.Dispose();
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     GameHub.Instance.NetworkBroadcastLog += ("Broadcast stopped.\n");
