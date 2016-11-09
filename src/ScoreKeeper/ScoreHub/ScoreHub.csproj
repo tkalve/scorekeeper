@@ -33,13 +33,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>3F9206D75FC478FD0CC49AB3CB3D3822B8705006</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>9C8DD7955CD6B07C5B91C70D17A33EEC637864EF</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>ScoreHub_TemporaryKey.pfx</ManifestKeyFile>

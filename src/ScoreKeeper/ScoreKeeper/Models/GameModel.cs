@@ -25,6 +25,8 @@ namespace ScoreKeeper.Models
         private string _blueTeamName;
         private string _whiteTeamName;
 
+        private string _type;
+
         private int _blueTeamGoals;
         private int _whiteTeamGoals;
 
@@ -61,6 +63,19 @@ namespace ScoreKeeper.Models
             set
             {
                 _whiteTeamName = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string WhiteTeamShortName => _whiteTeamName?.ToUpper().Substring(0, 3);
+        public string BlueTeamShortName => _blueTeamName?.ToUpper().Substring(0, 3);
+
+        public string Type
+        {
+            get { return _type; }
+            set
+            {
+                _type = value;
                 NotifyPropertyChanged();
             }
         }

@@ -20,12 +20,12 @@
 
         <Border Grid.Row="0" Grid.Column="0" Margin="30 40 0 0" BorderBrush="SteelBlue" BorderThickness="0 0 0 40">
             <Viewbox HorizontalAlignment="Stretch">
-                <Label HorizontalAlignment="Center" FontWeight="Bold" Foreground="#404040" Content="{Binding BlueTeamName, FallbackValue=BLUE}"></Label>
+                <Label HorizontalAlignment="Center" FontWeight="Bold" Foreground="#404040" Content="{Binding BlueTeamShortName, FallbackValue=BLUE}"></Label>
             </Viewbox>
         </Border>
         <Border Grid.Row="0" Grid.Column="2" Margin="0 40 30 0" BorderBrush="Silver" BorderThickness="0 0 0 40">
             <Viewbox HorizontalAlignment="Stretch" Margin="0 0 30 0">
-                <Label HorizontalAlignment="Center" FontWeight="Bold" Foreground="#404040" Content="{Binding WhiteTeamName, FallbackValue=WHITE}"></Label>
+                <Label HorizontalAlignment="Center" FontWeight="Bold" Foreground="#404040" Content="{Binding WhiteTeamShortName, FallbackValue=WHITE}"></Label>
             </Viewbox>
         </Border>
         <Viewbox Grid.Row="0" Grid.Column="1" Margin="20">

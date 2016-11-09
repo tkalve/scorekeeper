@@ -83,18 +83,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button windows:ButtonExtensions.Active="true" Style="{DynamicResource IconButtonStyle}" ToolTip="Games list" Name="GamesListButton" Click="GamesListButton_Click">
                     <Viewbox>
-                        <Canvas Width="81" Height="100">
-                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Height="100" Stretch="Fill" Width="81">
-                                <Path.Data>
-                                    <PathGeometry FillRule="Nonzero" Figures="M60,0L6,0C2.7,0,0,2.7,0,6L0,75C0,78.3,2.7,81,6,81L60,81C63.3,81,66,78.3,66,75L66,6C66,2.7,63.3,0,60,0z M33,80C31.1,80 29.5,78.4 29.5,76.5 29.5,74.6 31.1,73 33,73 34.9,73 36.5,74.6 36.5,76.5 36.5,78.4 34.9,80 33,80z M57,72L9.1,72 9,72 9,9 57,9 57,72z" />
-                                </Path.Data>
-                            </Path>
-                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Opacity="0.1" Height="90" Stretch="Fill" Width="71">
-                                <Path.Data>
-                                    <PathGeometry FillRule="Nonzero" Figures="M57,72L9.1,72 9,72 9,9 57,9z" />
-                                </Path.Data>
-                            </Path>
-                        </Canvas>
+                        <Label Foreground="White">Games</Label>
                     </Viewbox>
                 </Button >
                 <Button windows:ButtonExtensions.Active="false" Style="{DynamicResource IconButtonStyle}" ToolTip="Preview" Name="PreviewButton" Click="PreviewButton_OnClick">
@@ -157,7 +146,11 @@
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Margin="20 20 20 10" Content="Games" FontSize="28" FontWeight="Bold" Foreground="White" Padding="0"></Label>
-            <TextBlock Grid.Row="1" Margin="20 0 20 0" Foreground="#c0c0c0" FontSize="12" TextWrapping="Wrap">Add list of games and select in the list to set active game.</TextBlock>
+
+            <DockPanel Grid.Row="1" Margin="20 0 20 0" Name="LoadGamesPanel">
+                <TextBlock VerticalAlignment="Center" Foreground="#c0c0c0" FontSize="12" TextWrapping="Wrap">Load list of games and select in the list to set active game.</TextBlock>
+                <Button HorizontalAlignment="Right" Name="LoadButton" Click="LoadButton_OnClick">Load</Button>
+            </DockPanel>
 
             <ListView Grid.Row="2" Margin="20 10 20 20" ItemsSource="{Binding Games}" Name="GamesListView" SelectionChanged="GamesListView_SelectionChanged" BorderThickness="0" Background="Transparent">
                 <ListView.Resources>
@@ -173,9 +166,10 @@
                                 </TextBlock>
                                 <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="White">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                        <MultiBinding StringFormat="{}{0} - {1} {2}">
                                             <Binding Path="BlueTeamName" FallbackValue="BLUE" />
                                             <Binding Path="WhiteTeamName" FallbackValue="WHITE" />
+                                            <Binding Path="Type" FallbackValue="" />
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
@@ -197,9 +191,10 @@
                                             </TextBlock>
                                             <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="White">
                                                 <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0} - {1}">
+                                                    <MultiBinding StringFormat="{}{0} - {1} {2}">
                                                         <Binding Path="BlueTeamName" FallbackValue="BLUE" />
                                                         <Binding Path="WhiteTeamName" FallbackValue="WHITE" />
+                                                        <Binding Path="Type" FallbackValue="" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
@@ -310,9 +305,10 @@
                         </TextBlock>
                         <TextBlock FontWeight="Bold" Margin="20 0 0 0" FontSize="45" Foreground="#c0c0c0">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} - {1}">
+                            <MultiBinding StringFormat="{}{0} - {1} {2}">
                                 <Binding Path="CurrentGame.BlueTeamName" FallbackValue="BLUE" />
                                 <Binding Path="CurrentGame.WhiteTeamName" FallbackValue="WHITE" />
+                                <Binding Path="CurrentGame.Type" FallbackValue="" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
@@ -354,8 +350,20 @@
                     </Button.LayoutTransform>
                 </Button>
 
-                <Viewbox Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="1" Grid.RowSpan="6" Margin="20">
-                    <TextBlock Name="TimerClock" Foreground="#808080" FontWeight="Bold" FontSize="80" HorizontalAlignment="Center"  VerticalAlignment="Center">
+                <Viewbox Margin="30 0 30 0" Name="TimerClockEdit" Grid.Row="0" Grid.Column="3" Grid.RowSpan="6" Visibility="Collapsed">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox Width="120" HorizontalContentAlignment="Right" FontSize="80"  Background="White" FontWeight="Bold" Name="MinuteTextBox">0</TextBox>
+                        <TextBlock FontSize="80" Background="White" FontWeight="Bold" >:</TextBlock>
+                        <TextBox Width="120" FontSize="80" Background="White" FontWeight="Bold"  Name="SecondsTextBox">0</TextBox>
+                        <StackPanel Margin="20 0 0 0">
+                            <Button Name="SetTimeButton" Click="SetTimeButton_OnClick" VerticalAlignment="Center">Set</Button>
+                            <Button Name="CancelTimeButton" Click="CancelTimeButton_OnClick" VerticalAlignment="Center">Cancel</Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Viewbox>
+
+                <Viewbox Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="1" Grid.RowSpan="6" Margin="20" Name="TimerClockDisplay" Visibility="Visible">
+                    <TextBlock MouseRightButtonUp="TimerClock_OnMouseRightButtonUp" Name="TimerClock" Foreground="#808080" FontWeight="Bold" FontSize="80" HorizontalAlignment="Center"  VerticalAlignment="Center">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0}:{1:00}">
                                 <Binding Path="CurrentGame.TimeLeft.Minutes" FallbackValue="15" />

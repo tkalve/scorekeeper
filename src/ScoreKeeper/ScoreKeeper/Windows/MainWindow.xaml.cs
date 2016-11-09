@@ -19,6 +19,8 @@ using ScoreKeeper.Models;
 using ScoreKeeper.Properties;
 using System.Windows.Input;
 using System.Windows.Media;
+using Google.Apis.Sheets.v4;
+using Color = System.Windows.Media.Color;
 
 namespace ScoreKeeper.Windows
 {
@@ -38,34 +40,6 @@ namespace ScoreKeeper.Windows
             
             DataContext = GameHub.Instance;
 
-            // Add games
-            int i = 0;
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "NOR", WhiteTeamName = "SWE", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "DEN", WhiteTeamName = "GER", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-            GameHub.Instance.Games.Add(new Game { Id = i++, BlueTeamName = "COL", WhiteTeamName = "USA", Rounds = 2, TimeLeft = new TimeSpan(0, 8, 0) });
-
-            GamesListView.SelectedIndex = 0;
 
             GameHub.Instance.PropertyChanged += MainViewModel_PropertyChanged;
 
@@ -484,6 +458,53 @@ namespace ScoreKeeper.Windows
         private void GamesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GameHub.Instance.CurrentGame = GamesListView.SelectedItem as Game;
+        }
+
+        private void LoadButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            SheetReader sheetReader = new SheetReader();
+            sheetReader.Load(GameHub.Instance.Games);
+
+            GamesListView.SelectedIndex = 0;
+
+            LoadGamesPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void TimerClock_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (!_timer.IsEnabled)
+            {
+                TimerClock.Visibility = Visibility.Collapsed;
+                TimerClockEdit.Visibility = Visibility.Visible;
+
+                MinuteTextBox.Text = GameHub.Instance.CurrentGame.TimeLeft.Minutes.ToString();
+                SecondsTextBox.Text = GameHub.Instance.CurrentGame.TimeLeft.Seconds.ToString();
+            }
+        }
+
+        private void SetTimeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var minutes = int.Parse(MinuteTextBox.Text);
+                var seconds = int.Parse(SecondsTextBox.Text);
+
+                var timeSpan = new TimeSpan(0, minutes, seconds);
+                GameHub.Instance.CurrentGame.TimeLeft = timeSpan;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            TimerClock.Visibility = Visibility.Visible;
+            TimerClockEdit.Visibility = Visibility.Collapsed;
+        }
+
+        private void CancelTimeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            TimerClock.Visibility = Visibility.Visible;
+            TimerClockEdit.Visibility = Visibility.Collapsed;
         }
     }
 
