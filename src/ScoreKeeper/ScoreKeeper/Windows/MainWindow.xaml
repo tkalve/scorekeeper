@@ -260,7 +260,7 @@
             </StackPanel>
 
         </Grid>
-        <Grid Name="NetworkBroadcastTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">
+        <Grid Name="NetworkBroadcastTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Background="#404040" Visibility="Collapsed">
             <StackPanel Margin="20">
                 <Label Content="Network broadcast" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
                 <TextBlock Foreground="#c0c0c0" Margin="0 0 0 0" FontSize="12" TextWrapping="Wrap">Enable or disable network broadcast. Network broadcast needs to be enabled to use an external scoreboard or scorehub.</TextBlock>
@@ -268,7 +268,7 @@
                     <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding NetworkBroadcastEnabled, Converter={StaticResource boolConvert}}" Content="Enable" Name="EnableNetworkBroadcastButton" Click="EnableNetworkBroadcastButton_OnClick"></Button>
                     <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding NetworkBroadcastEnabled}" Content="Disable" Name="DisableNetworkBroadcastButton" Click="DisableNetworkBroadcastButton_OnClick"></Button>
                 </StackPanel>
-                <TextBlock Text="{Binding NetworkBroadcastLog}" TextWrapping="Wrap"></TextBlock>
+                <TextBlock Foreground="#C0C0C0" Text="{Binding NetworkBroadcastLog}" TextWrapping="Wrap" VerticalAlignment="Bottom"></TextBlock>
             </StackPanel>
         </Grid>
         <Grid Name="WebControlTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">

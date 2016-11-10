@@ -116,11 +116,6 @@ namespace ScoreKeeper.Windows
             var data = Encoding.ASCII.GetBytes(gd);
             var endpoint = new IPEndPoint(IPAddress.Broadcast, 8888);
             BroadcastClient?.SendAsync(data, data.Length, endpoint);
-
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                GameHub.Instance.NetworkBroadcastLog += ("Sent " + data.Length + " bytes to " + endpoint + "\n");
-            }));
         }
 
         private void EnableBroadcast()

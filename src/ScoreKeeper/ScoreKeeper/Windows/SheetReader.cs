@@ -27,55 +27,62 @@ namespace ScoreKeeper.Windows
 
         public void Load(ObservableCollection<Game> gameList)
         {
-            UserCredential credential;
-
-            using (var stream =
-                new FileStream("client_id.json", FileMode.Open, FileAccess.Read))
+            try
             {
-                string credPath = System.Environment.GetFolderPath(
-                    System.Environment.SpecialFolder.Personal);
-                credPath = Path.Combine(credPath, ".credentials/sheets.scorekeeper.json");
+                UserCredential credential;
 
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-            }
-
-
-            // Create Google Sheets API service.
-            var service = new SheetsService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = AppName,
-            });
-
-            // Define request parameters.
-            String spreadsheetId = "17Bb9XC1M5Ev9oaFbMBtCGP56uPynzI9ugrRnBSRsbgw";
-            String range = "GameList!A2:F";
-            SpreadsheetsResource.ValuesResource.GetRequest request =
-                service.Spreadsheets.Values.Get(spreadsheetId, range);
-
-            ValueRange response = request.Execute();
-            IList<IList<object>> values = response.Values;
-            if (values != null && values.Count > 0)
-            {
-                foreach (var row in values)
+                using (var stream =
+                    new FileStream("client_id.json", FileMode.Open, FileAccess.Read))
                 {
-                    var blue = row[2].ToString().Split(' ');
-                    var white = row[3].ToString().Split(' ');
-                    var type = (blue.Length > 1) ? blue[1].TrimStart('(').TrimEnd(')') : "";
+                    string credPath = System.Environment.GetFolderPath(
+                        System.Environment.SpecialFolder.Personal);
+                    credPath = Path.Combine(credPath, ".credentials/sheets.scorekeeper.json");
 
-                    gameList.Add(new Game()
-                    {
-                        Id = int.Parse(row[0].ToString()),
-                        BlueTeamName = blue[0],
-                        WhiteTeamName = white[0],
-                        Type = type
-                    });
+                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        GoogleClientSecrets.Load(stream).Secrets,
+                        Scopes,
+                        "user",
+                        CancellationToken.None,
+                        new FileDataStore(credPath, true)).Result;
                 }
+
+
+                // Create Google Sheets API service.
+                var service = new SheetsService(new BaseClientService.Initializer()
+                {
+                    HttpClientInitializer = credential,
+                    ApplicationName = AppName,
+                });
+
+                // Define request parameters.
+                String spreadsheetId = "17Bb9XC1M5Ev9oaFbMBtCGP56uPynzI9ugrRnBSRsbgw";
+                String range = "GameList!A2:F";
+                SpreadsheetsResource.ValuesResource.GetRequest request =
+                    service.Spreadsheets.Values.Get(spreadsheetId, range);
+
+                ValueRange response = request.Execute();
+                IList<IList<object>> values = response.Values;
+                if (values != null && values.Count > 0)
+                {
+                    foreach (var row in values)
+                    {
+                        var blue = row[2].ToString().Split(' ');
+                        var white = row[3].ToString().Split(' ');
+                        var type = (blue.Length > 1) ? blue[1].TrimStart('(').TrimEnd(')') : "";
+
+                        gameList.Add(new Game()
+                        {
+                            Id = int.Parse(row[0].ToString()),
+                            BlueTeamName = blue[0],
+                            WhiteTeamName = white[0],
+                            Type = type
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occured while attempting to load games. Are you connected to the interwebs?\r\n\r\nPlease let Thomas know if you are connected and something else is wrong.\r\n\r\nActual error: " + ex.Message, "Unable to load games");
             }
         }
     }
