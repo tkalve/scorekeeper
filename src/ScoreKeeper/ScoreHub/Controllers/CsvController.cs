@@ -18,7 +18,7 @@ namespace ScoreHub.Controllers
             HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
 
             string headers = "BlueTeamName,WhiteTeamName,BlueTeamGoals,WhiteTeamGoals,Rounds,CurrentRound,TimeMin,TimeSec,Extra";
-            string data = $"{GameHub.Instance.CurrentGame?.BlueTeamShortName},{GameHub.Instance.CurrentGame?.WhiteTeamShortName},{GameHub.Instance.CurrentGame?.BlueTeamGoals},{GameHub.Instance.CurrentGame?.WhiteTeamGoals},{GameHub.Instance.CurrentGame?.Rounds},{GameHub.Instance.CurrentGame?.CurrentRound},{GameHub.Instance.CurrentGame?.TimeLeft.Minutes},{GameHub.Instance.CurrentGame?.TimeLeft.Seconds},{GameHub.Instance.CurrentGame?.Extra}";
+            string data = $"{GameHub.Instance.CurrentGame?.BlueTeamShortName},{GameHub.Instance.CurrentGame?.WhiteTeamShortName},{GameHub.Instance.CurrentGame?.BlueTeamGoals},{GameHub.Instance.CurrentGame?.WhiteTeamGoals},{GameHub.Instance.CurrentGame?.Rounds},{GameHub.Instance.CurrentGame?.CurrentRound},{GameHub.Instance.CurrentGame?.TimeLeft.Minutes:00},{GameHub.Instance.CurrentGame?.TimeLeft.Seconds:00},{GameHub.Instance.CurrentGame?.Extra}";
             
             result.Content = new StringContent($"{headers}\r\n{data}");
             //result.Content.Headers.ContentType = new MediaTypeHeaderValue("text/csv");

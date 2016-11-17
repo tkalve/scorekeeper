@@ -48,10 +48,10 @@ namespace ScoreKeeper.Windows
             {
                 // Stop timer if time is out
                 // TODO: Show something graphically?
-                if (GameHub.Instance.CurrentGame.TimeLeft == TimeSpan.Zero) _timer.Stop();
-                
-                // Remove a second from the timer0
-                GameHub.Instance.CurrentGame.TimeLeft = GameHub.Instance.CurrentGame.TimeLeft.Add(TimeSpan.FromSeconds(-1));
+                if (GameHub.Instance.CurrentGame.TimeLeft == TimeSpan.Zero)
+                    _timer.Stop();
+                else
+                    GameHub.Instance.CurrentGame.TimeLeft = GameHub.Instance.CurrentGame.TimeLeft.Add(TimeSpan.FromSeconds(-1));
 
                 // Update hub if enabled
                 if (Settings.Default.EnableWebServer)

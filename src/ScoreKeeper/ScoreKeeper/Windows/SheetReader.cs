@@ -55,7 +55,7 @@ namespace ScoreKeeper.Windows
                 });
 
                 // Define request parameters.
-                String spreadsheetId = "17Bb9XC1M5Ev9oaFbMBtCGP56uPynzI9ugrRnBSRsbgw";
+                String spreadsheetId = "1Kd1CAXMevGHnBzEri4oZkguDimYWwcz9dDQOc_NCK6Q";
                 String range = "GameList!A2:F";
                 SpreadsheetsResource.ValuesResource.GetRequest request =
                     service.Spreadsheets.Values.Get(spreadsheetId, range);
