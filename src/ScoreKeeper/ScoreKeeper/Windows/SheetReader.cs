@@ -55,7 +55,7 @@ namespace ScoreKeeper.Windows
                 });
 
                 // Define request parameters.
-                String spreadsheetId = "1Kd1CAXMevGHnBzEri4oZkguDimYWwcz9dDQOc_NCK6Q";
+                String spreadsheetId = "1Hwiqvk7c3rc_R6A6ru94ckcKh17mBPcqNXNiM1YZOZ8";
                 String range = "GameList!A2:F";
                 SpreadsheetsResource.ValuesResource.GetRequest request =
                     service.Spreadsheets.Values.Get(spreadsheetId, range);
@@ -66,17 +66,22 @@ namespace ScoreKeeper.Windows
                 {
                     foreach (var row in values)
                     {
-                        var blue = row[2].ToString().Split(' ');
-                        var white = row[3].ToString().Split(' ');
-                        var type = (blue.Length > 1) ? blue[1].TrimStart('(').TrimEnd(')') : "";
 
-                        gameList.Add(new Game()
+
+                        if (row.Count > 4)
                         {
-                            Id = int.Parse(row[0].ToString()),
-                            BlueTeamName = blue[0],
-                            WhiteTeamName = white[0],
-                            Type = type
-                        });
+                            var blue = row[1].ToString();
+                            var white = row[2].ToString();
+                            var type = row[4].ToString();
+
+                            gameList.Add(new Game()
+                            {
+                                Id = int.Parse(row[0].ToString()),
+                                BlueTeamName = blue,
+                                WhiteTeamName = white,
+                                Type = type
+                            });
+                        }
                     }
                 }
             }

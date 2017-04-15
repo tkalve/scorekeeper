@@ -6,6 +6,7 @@
              StartupUri="Windows/MainWindow.xaml">
     <Application.Resources>
         <windows:InvertBooleanConverter  x:Key="boolConvert"/>
+        <BooleanToVisibilityConverter  x:Key="boolToVisConvert"/>
 
         <DataTemplate x:Key="DisplayItemTemplate">
             <Grid>

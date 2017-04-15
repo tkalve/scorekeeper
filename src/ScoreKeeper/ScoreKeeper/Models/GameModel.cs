@@ -18,6 +18,7 @@ namespace ScoreKeeper.Models
             _blueTeamGoals = 0;
             _whiteTeamGoals = 0;
             _timeLeft = new TimeSpan(0, 8, 0);
+            _halfTime = false;
         }
 
         private int? _id;
@@ -26,7 +27,7 @@ namespace ScoreKeeper.Models
         private string _whiteTeamName;
 
         private string _type;
-
+        
         private int _blueTeamGoals;
         private int _whiteTeamGoals;
 
@@ -36,6 +37,7 @@ namespace ScoreKeeper.Models
         private string _extra;
 
         private TimeSpan _timeLeft;
+        private bool _halfTime;
 
         public int? Id
         {
@@ -145,6 +147,19 @@ namespace ScoreKeeper.Models
             set
             {
                 _timeLeft = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool HalfTime
+        {
+            get
+            {
+                return _halfTime;
+            }
+            set
+            {
+                _halfTime = value;
                 NotifyPropertyChanged();
             }
         }

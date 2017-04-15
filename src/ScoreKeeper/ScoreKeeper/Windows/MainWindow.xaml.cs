@@ -172,6 +172,7 @@ namespace ScoreKeeper.Windows
         private void StartTimerButton_OnClick(object sender, RoutedEventArgs e)
         {
             _timer.Start();
+            GameHub.Instance.CurrentGame.HalfTime = false;
             TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
         }
 
@@ -461,8 +462,6 @@ namespace ScoreKeeper.Windows
             sheetReader.Load(GameHub.Instance.Games);
 
             GamesListView.SelectedIndex = 0;
-
-            LoadGamesPanel.Visibility = Visibility.Collapsed;
         }
 
         private void TimerClock_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -500,6 +499,24 @@ namespace ScoreKeeper.Windows
         {
             TimerClock.Visibility = Visibility.Visible;
             TimerClockEdit.Visibility = Visibility.Collapsed;
+        }
+
+        private void HalftimeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (GameHub.Instance.CurrentGame.HalfTime)
+                GameHub.Instance.CurrentGame.HalfTime = false;
+            else
+            {
+                GameHub.Instance.CurrentGame.CurrentRound = 2;
+                GameHub.Instance.CurrentGame.Extra = "";
+                GameHub.Instance.CurrentGame.HalfTime = true;
+                Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+                Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+                SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+                _timer.Stop();
+                GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, 8, 0);
+                TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+            }
         }
     }
 

@@ -166,7 +166,7 @@
                                 </TextBlock>
                                 <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="White">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="{}{0} - {1} {2}">
+                                        <MultiBinding StringFormat="{}{0} - {1} ({2})">
                                             <Binding Path="BlueTeamName" FallbackValue="BLUE" />
                                             <Binding Path="WhiteTeamName" FallbackValue="WHITE" />
                                             <Binding Path="Type" FallbackValue="" />
@@ -191,7 +191,7 @@
                                             </TextBlock>
                                             <TextBlock Margin="10" FontSize="22" FontWeight="Bold" Foreground="White">
                                                 <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0} - {1} {2}">
+                                                    <MultiBinding StringFormat="{}{0} - {1} ({2})">
                                                         <Binding Path="BlueTeamName" FallbackValue="BLUE" />
                                                         <Binding Path="WhiteTeamName" FallbackValue="WHITE" />
                                                         <Binding Path="Type" FallbackValue="" />
@@ -305,7 +305,7 @@
                         </TextBlock>
                         <TextBlock FontWeight="Bold" Margin="20 0 0 0" FontSize="45" Foreground="#c0c0c0">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} - {1} {2}">
+                            <MultiBinding StringFormat="{}{0} - {1} ({2})">
                                 <Binding Path="CurrentGame.BlueTeamName" FallbackValue="BLUE" />
                                 <Binding Path="CurrentGame.WhiteTeamName" FallbackValue="WHITE" />
                                 <Binding Path="CurrentGame.Type" FallbackValue="" />
@@ -316,7 +316,7 @@
                 </Viewbox>
             </Grid>
         </Border>
-        <Border Grid.Row="2" Grid.Column="0" Background="#F0F0F0"  CornerRadius="0">
+        <Border Grid.Row="2" Grid.Column="0" Background="#F0F0F0"  CornerRadius="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="0,0.4" Width="537">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>
@@ -339,8 +339,9 @@
                         <RotateTransform Angle="-90" />
                     </TextBlock.LayoutTransform>
                 </TextBlock>
-                <Button Margin="10 10 10 5"  Name="StartTimerButton" Click="StartTimerButton_OnClick" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1">Start</Button>
-                <Button Margin="10 5 10 10" Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="3" Grid.RowSpan="3" Grid.Column="1">Stop</Button>
+                <Button Margin="10 10 10 5"  Name="StartTimerButton" Click="StartTimerButton_OnClick" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">Start</Button>
+                <Button Margin="10 5 10 10" Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1">Stop</Button>
+                <Button Margin="10 5 10 10" Name="HalftimeButton" Click="HalftimeButton_OnClick" Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Background="#808080">Half</Button>
                 <Button Background="#808080" FontSize="25" Padding="0" Margin="10 10 10 7"  Name="Round1Button" Click="Round1Button_Click" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2">1</Button>
                 <Button Background="#808080" FontSize="25" Padding="0" Margin="10 8 10 7" Name="Round2Button" Click="Round2Button_Click" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2">2</Button>
                 <Button Background="#808080" FontSize="20" Padding="0" Margin="10 8 10 10" Name="SuddenDeathButton" Click="SuddenDeathButton_Click" Grid.Row="4" Grid.RowSpan="2" Grid.Column="2">SD</Button>

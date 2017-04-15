@@ -62,6 +62,8 @@ namespace ScoreHub
 
                 var game = JsonConvert.DeserializeObject<Game>(Encoding.UTF8.GetString(received));
                 GameHub.Instance.CurrentGame = game;
+                GameHub.Instance.CurrentGame.WhiteTeamName = GameHub.Instance.CurrentGame.WhiteTeamName.Replace("?lesund", "Ålesund");
+                GameHub.Instance.CurrentGame.BlueTeamName = GameHub.Instance.CurrentGame.BlueTeamName.Replace("?lesund", "Ålesund");
                 Console.WriteLine($"Received {received.Length} bytes from {remoteIpEndPoint.Address}");
             }
             catch (Exception e)
