@@ -185,7 +185,7 @@ namespace ScoreKeeper.Windows
         private void ResetTimerbutton_Click(object sender, RoutedEventArgs e)
         {
             _timer.Stop();
-            GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, 8, 0);
+            GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
             TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
         }
 
@@ -514,7 +514,7 @@ namespace ScoreKeeper.Windows
                 Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
                 SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
                 _timer.Stop();
-                GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, 8, 0);
+                GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
                 TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
             }
         }

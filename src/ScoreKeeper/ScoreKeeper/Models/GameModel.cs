@@ -19,7 +19,19 @@ namespace ScoreKeeper.Models
             _whiteTeamGoals = 0;
             _timeLeft = new TimeSpan(0, 8, 0);
             _halfTime = false;
+            _roundMinutes = 8;
         }
+        public Game(int roundMinutes)
+        {
+            _rounds = 2;
+            _currentRound = 1;
+            _blueTeamGoals = 0;
+            _whiteTeamGoals = 0;
+            _timeLeft = new TimeSpan(0, roundMinutes, 0);
+            _halfTime = false;
+            _roundMinutes = roundMinutes;
+        }
+
 
         private int? _id;
 
@@ -36,6 +48,7 @@ namespace ScoreKeeper.Models
 
         private string _extra;
 
+        private int _roundMinutes;
         private TimeSpan _timeLeft;
         private bool _halfTime;
 
@@ -137,6 +150,19 @@ namespace ScoreKeeper.Models
                 NotifyPropertyChanged();
             }
         }
+
+        public int RoundMinutes
+        {
+            get
+            {
+                return _roundMinutes;
+            }
+            set
+            {
+                _roundMinutes = value;
+                NotifyPropertyChanged();
+            }
+        } 
 
         public TimeSpan TimeLeft
         {
