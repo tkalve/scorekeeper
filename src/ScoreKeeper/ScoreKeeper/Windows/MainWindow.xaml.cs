@@ -75,41 +75,6 @@ namespace ScoreKeeper.Windows
         public GoalWindow GoalWindow;
         
         private readonly DispatcherTimer _timer;
-        private IDisposable _webServerDisposable;
-
-        private void EnableWebserver()
-        {
-            var ip = string.IsNullOrWhiteSpace(Settings.Default.WebServerIp)
-                ? Network.GetLocalIpAddress()
-                : Settings.Default.WebServerIp;
-
-            var url = $"http://{ip}:{Settings.Default.WebServerPort}";
-            try
-            {
-                _webServerDisposable = WebApp.Start<Startup>(url: url);
-
-                UpdateHub();
-
-                GameHub.Instance.WebServerEnabled = true;
-                GameHub.Instance.WebServerUrl = url;
-                GameHub.Instance.WebServerStatus = "Webserver running.";
-            }
-            catch (Exception ex)
-            {
-                GameHub.Instance.WebServerEnabled = false;
-                GameHub.Instance.WebServerUrl = "";
-                GameHub.Instance.WebServerStatus = "Unable to start webserver: " + ex.Message;
-            }
-        }
-
-        private void DisableWebserver()
-        {
-            _webServerDisposable?.Dispose();
-
-            GameHub.Instance.WebServerEnabled = false;
-            GameHub.Instance.WebServerStatus = "Webserver stopped.";
-            GameHub.Instance.WebServerUrl = "";
-        }
 
         private void BroadcastTimerCallback()
         {
@@ -150,11 +115,6 @@ namespace ScoreKeeper.Windows
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (Settings.Default.EnableWebServer)
-                EnableWebserver();
-            else
-                DisableWebserver();
-
             if (Settings.Default.EnableBroadcast)
                 EnableBroadcast();
             else
@@ -241,13 +201,11 @@ namespace ScoreKeeper.Windows
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
             ButtonExtensions.SetActive(NetworkBroadcastButton, false);
-            ButtonExtensions.SetActive(WebControlButton, false);
 
             GamesTab.Visibility = Visibility.Visible;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
             NetworkBroadcastTab.Visibility = Visibility.Collapsed;
-            WebControlTab.Visibility = Visibility.Collapsed;
         }
 
         private void PreviewButton_OnClick(object sender, RoutedEventArgs e)
@@ -256,13 +214,11 @@ namespace ScoreKeeper.Windows
             ButtonExtensions.SetActive(PreviewButton, true);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
             ButtonExtensions.SetActive(NetworkBroadcastButton, false);
-            ButtonExtensions.SetActive(WebControlButton, false);
 
             GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Visible;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
             NetworkBroadcastTab.Visibility = Visibility.Collapsed;
-            WebControlTab.Visibility = Visibility.Collapsed;
         }
         private void ExternalDisplayButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -270,13 +226,11 @@ namespace ScoreKeeper.Windows
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, true);
             ButtonExtensions.SetActive(NetworkBroadcastButton, false);
-            ButtonExtensions.SetActive(WebControlButton, false);
 
             GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Visible;
             NetworkBroadcastTab.Visibility = Visibility.Collapsed;
-            WebControlTab.Visibility = Visibility.Collapsed;
         }
         private void NetworkBroadcastButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -284,27 +238,11 @@ namespace ScoreKeeper.Windows
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
             ButtonExtensions.SetActive(NetworkBroadcastButton, true);
-            ButtonExtensions.SetActive(WebControlButton, false);
 
             GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
             NetworkBroadcastTab.Visibility = Visibility.Visible;
-            WebControlTab.Visibility = Visibility.Collapsed;
-        }
-        private void WebControlButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            ButtonExtensions.SetActive(GamesListButton, false);
-            ButtonExtensions.SetActive(PreviewButton, false);
-            ButtonExtensions.SetActive(ExternalDisplayButton, false);
-            ButtonExtensions.SetActive(NetworkBroadcastButton, false);
-            ButtonExtensions.SetActive(WebControlButton, true);
-
-            GamesTab.Visibility = Visibility.Collapsed;
-            PreviewTab.Visibility = Visibility.Collapsed;
-            ExternalDisplayTab.Visibility = Visibility.Collapsed;
-            NetworkBroadcastTab.Visibility = Visibility.Collapsed;
-            WebControlTab.Visibility = Visibility.Visible;
         }
 
         private void DisplayItemButton_OnClick(object sender, RoutedEventArgs e)
@@ -369,16 +307,6 @@ namespace ScoreKeeper.Windows
         private void DisableNetworkBroadcastButton_OnClick(object sender, RoutedEventArgs e)
         {
             DisableBroadcast();
-        }
-
-        private void EnableWebServerButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            EnableWebserver();
-        }
-
-        private void DisableWebServerButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            DisableWebserver();
         }
 
         private void BlueUpButton_Click(object sender, RoutedEventArgs e)

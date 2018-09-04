@@ -120,22 +120,6 @@
                         </Canvas>
                     </Viewbox>
                 </Button>
-                <Button Visibility="Collapsed" Style="{DynamicResource IconButtonStyle}" ToolTip="Web control" Name="WebControlButton" Click="WebControlButton_OnClick">
-                    <Viewbox>
-                        <Canvas Width="81" Height="100">
-                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Height="100" Stretch="Fill" Width="81">
-                                <Path.Data>
-                                    <PathGeometry FillRule="Nonzero" Figures="M60,0L6,0C2.7,0,0,2.7,0,6L0,75C0,78.3,2.7,81,6,81L60,81C63.3,81,66,78.3,66,75L66,6C66,2.7,63.3,0,60,0z M33,80C31.1,80 29.5,78.4 29.5,76.5 29.5,74.6 31.1,73 33,73 34.9,73 36.5,74.6 36.5,76.5 36.5,78.4 34.9,80 33,80z M57,72L9.1,72 9,72 9,9 57,9 57,72z" />
-                                </Path.Data>
-                            </Path>
-                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Opacity="0.1" Height="90" Stretch="Fill" Width="71">
-                                <Path.Data>
-                                    <PathGeometry FillRule="Nonzero" Figures="M57,72L9.1,72 9,72 9,9 57,9z" />
-                                </Path.Data>
-                            </Path>
-                        </Canvas>
-                    </Viewbox>
-                </Button>
             </StackPanel>
         </DockPanel>
 
@@ -274,18 +258,6 @@
                     <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding NetworkBroadcastEnabled}" Content="Disable" Name="DisableNetworkBroadcastButton" Click="DisableNetworkBroadcastButton_OnClick"></Button>
                 </StackPanel>
                 <TextBlock Foreground="#C0C0C0" Text="{Binding NetworkBroadcastLog}" TextWrapping="Wrap" VerticalAlignment="Bottom"></TextBlock>
-            </StackPanel>
-        </Grid>
-        <Grid Name="WebControlTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">
-            <StackPanel Margin="20">
-                <Label Content="Web control" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
-                <TextBlock Foreground="#c0c0c0" Margin="0 0 0 0" FontSize="12" TextWrapping="Wrap">Enable or disable web control. When enabled, access the URL from a mobile device or web browser to control remotely. [NOT READY]</TextBlock>
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding WebServerEnabled, Converter={StaticResource boolConvert}}" Content="Enable" Name="EnableWebServerButton" Click="EnableWebServerButton_OnClick"></Button>
-                    <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding WebServerEnabled}" Content="Disable" Name="DisableWebServerButton" Click="DisableWebServerButton_OnClick"></Button>
-                </StackPanel>
-                <TextBlock Foreground="#c0c0c0" FontSize="12" Margin="0" Text="{Binding WebServerStatus}"></TextBlock>
-                <TextBlock Foreground="Blue" TextDecorations="Underline" FontSize="12" Margin="0" Text="{Binding WebServerUrl}"></TextBlock>
             </StackPanel>
         </Grid>
 

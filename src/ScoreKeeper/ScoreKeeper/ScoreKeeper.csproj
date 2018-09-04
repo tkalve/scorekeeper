@@ -14,19 +14,21 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>c:\publish\scorekeeper\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://tkalve.no/scorekeeper/install/scorekeeper/</InstallUrl>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.5.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -174,7 +176,6 @@
     </ApplicationDefinition>
     <Compile Include="GameHub.cs" />
     <Compile Include="Models\SheetObject.cs" />
-    <Compile Include="Startup.cs" />
     <Compile Include="Windows\GoalWindow.xaml.cs">
       <DependentUpon>GoalWindow.xaml</DependentUpon>
     </Compile>
@@ -191,7 +192,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Api\ValuesController.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -258,9 +258,6 @@
   <ItemGroup>
     <Content Include="Resources\ICSharpCode.SharpZipLib.dll" />
     <Content Include="Resources\ipad.svg" />
-    <Content Include="Web\index.html" />
-    <Content Include="Web\jquery-3.1.0.min.js" />
-    <Content Include="Web\jquery.signalR-2.2.1.min.js" />
     <Resource Include="Resources\ipad.xaml.png" />
     <Content Include="Resources\svg2xaml.exe" />
     <Content Include="Resources\wifi.svg" />
@@ -280,9 +277,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>XCOPY "$(ProjectDir)Web" "$(TargetDir)\Web\" /S /Y</PostBuildEvent>
-  </PropertyGroup>
+
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
