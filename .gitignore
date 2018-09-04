@@ -236,3 +236,4 @@ _Pvt_Extensions
 .fake/
 
 client_id.json
+*.pfx

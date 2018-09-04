@@ -52,16 +52,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>BFC0A25327B11C5E047292AE46E7129D3AE60650</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>3E02ED3DE1345300DFB717C0C5E5D2AC282140BA</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>ScoreKeeper_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>ScoreKeeper_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -250,7 +250,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="ScoreKeeper_TemporaryKey.pfx" />
+    <None Include="ScoreKeeper_2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
