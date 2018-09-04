@@ -56,14 +56,14 @@ namespace ScoreHub
         {
             try
             {
-                var remoteIpEndPoint = new IPEndPoint(IPAddress.Parse("192.168.88.149"), 8888);
+                var ip = Network.GetLocalIpAddress();
+                var remoteIpEndPoint = new IPEndPoint(IPAddress.Parse(ip), 8888);
                 byte[] received = ReceiveClient.EndReceive(res, ref remoteIpEndPoint);
                 ReceiveClient.BeginReceive(new AsyncCallback(Receive), null);
 
                 var game = JsonConvert.DeserializeObject<Game>(Encoding.UTF8.GetString(received));
                 GameHub.Instance.CurrentGame = game;
-                GameHub.Instance.CurrentGame.WhiteTeamName = GameHub.Instance.CurrentGame.WhiteTeamName.Replace("?lesund", "Ålesund");
-                GameHub.Instance.CurrentGame.BlueTeamName = GameHub.Instance.CurrentGame.BlueTeamName.Replace("?lesund", "Ålesund");
+
                 Console.WriteLine($"Received {received.Length} bytes from {remoteIpEndPoint.Address}");
             }
             catch (Exception e)

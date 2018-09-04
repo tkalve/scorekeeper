@@ -107,10 +107,7 @@ namespace ScoreKeeper.Models
 
         public int WhiteTeamGoals
         {
-            get
-            {
-                return _whiteTeamGoals;
-            }
+            get => _whiteTeamGoals;
             set
             {
                 _whiteTeamGoals = value;
@@ -120,10 +117,7 @@ namespace ScoreKeeper.Models
 
         public int Rounds
         {
-            get
-            {
-                return _rounds;
-            }
+            get => _rounds;
             set
             {
                 _rounds = value;
@@ -133,7 +127,7 @@ namespace ScoreKeeper.Models
 
         public int? CurrentRound
         {
-            get { return _currentRound; }
+            get => _currentRound;
             set
             {
                 _currentRound = value;

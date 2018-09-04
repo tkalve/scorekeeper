@@ -32,6 +32,8 @@ namespace ScoreKeeper.Windows
         public Timer BroadcastTimer { get; set; }
         public UdpClient BroadcastClient { get; set; }
 
+        public SheetReader SheetReader { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -456,14 +458,6 @@ namespace ScoreKeeper.Windows
             GameHub.Instance.CurrentGame = GamesListView.SelectedItem as Game;
         }
 
-        private void LoadButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            SheetReader sheetReader = new SheetReader();
-            sheetReader.Load(GameHub.Instance.Games);
-
-            GamesListView.SelectedIndex = 0;
-        }
-
         private void TimerClock_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (!_timer.IsEnabled)
@@ -516,6 +510,42 @@ namespace ScoreKeeper.Windows
                 _timer.Stop();
                 GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
                 TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+            }
+        }
+
+        private void LoginButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (SheetReader == null)
+                    SheetReader = new SheetReader();
+
+                SheetReader.Login();
+                SheetReader.GetSheets(GameHub.Instance.Sheets);
+                SheetsList.SelectedIndex = 0;
+
+                LoginPanel.Visibility = Visibility.Collapsed;
+                LoadGamesPanel.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                LoginPanel.Visibility = Visibility.Visible;
+                LoadGamesPanel.Visibility = Visibility.Collapsed;
+
+                MessageBox.Show(ex.Message, "An error occured", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LoadButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SheetReader.Load(SheetsList.SelectedValue as string, GameHub.Instance.Games);
+                GamesListView.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An error occured loading sheet", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

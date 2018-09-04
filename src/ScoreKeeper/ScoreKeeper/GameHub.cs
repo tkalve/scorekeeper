@@ -14,6 +14,7 @@ namespace ScoreKeeper
         {
             CurrentGame = new Game();
             Games = new ObservableCollection<Game>();
+            Sheets = new ObservableCollection<SheetObject>();
         }
 
         public bool Whiteout { get; set; }
@@ -21,6 +22,7 @@ namespace ScoreKeeper
 
         private Game _currentGame;
         private ObservableCollection<Game> _games;
+        private ObservableCollection<SheetObject> _sheets;
 
         private bool _webServerEnabled;
         private string _webServerUrl;
@@ -31,7 +33,7 @@ namespace ScoreKeeper
 
         public Game CurrentGame
         {
-            get { return _currentGame; }
+            get => _currentGame;
             set
             {
                 _currentGame = value;
@@ -41,7 +43,7 @@ namespace ScoreKeeper
 
         public ObservableCollection<Game> Games
         {
-            get { return _games; }
+            get => _games;
             set
             {
                 _games = value;
@@ -49,9 +51,19 @@ namespace ScoreKeeper
             }
         }
 
+        public ObservableCollection<SheetObject> Sheets
+        {
+            get => _sheets;
+            set
+            {
+                _sheets = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public bool WebServerEnabled
         {
-            get { return _webServerEnabled; }
+            get => _webServerEnabled;
             set
             {
                 _webServerEnabled = value;
@@ -61,7 +73,7 @@ namespace ScoreKeeper
 
         public string WebServerUrl
         {
-            get { return _webServerUrl; }
+            get => _webServerUrl;
             set
             {
                 _webServerUrl = value;
@@ -71,7 +83,7 @@ namespace ScoreKeeper
 
         public string WebServerStatus
         {
-            get { return _webServerStatus; }
+            get => _webServerStatus;
             set
             {
                 _webServerStatus = value;
@@ -81,7 +93,7 @@ namespace ScoreKeeper
 
         public bool NetworkBroadcastEnabled
         {
-            get { return _networkBroadcastEnabled; }
+            get => _networkBroadcastEnabled;
             set
             {
                 _networkBroadcastEnabled = value;
@@ -91,7 +103,7 @@ namespace ScoreKeeper
 
         public string NetworkBroadcastLog
         {
-            get { return _networkBroadcastLog; }
+            get => _networkBroadcastLog;
             set
             {
                 _networkBroadcastLog = value;

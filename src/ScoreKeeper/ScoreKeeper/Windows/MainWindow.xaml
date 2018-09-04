@@ -147,9 +147,14 @@
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Margin="20 20 20 10" Content="Games" FontSize="28" FontWeight="Bold" Foreground="White" Padding="0"></Label>
 
-            <DockPanel Grid.Row="1" Margin="20 0 20 0" Name="LoadGamesPanel">
-                <TextBlock VerticalAlignment="Center" Foreground="#c0c0c0" FontSize="12" TextWrapping="Wrap">Load list of games and select in the list to set active game.</TextBlock>
-                <Button HorizontalAlignment="Right" Name="LoadButton" Click="LoadButton_OnClick">Load</Button>
+            <DockPanel Grid.Row="1" Margin="20 0 20 0" Name="LoginPanel" Visibility="Visible">
+                <TextBlock VerticalAlignment="Center" Foreground="#c0c0c0" FontSize="12" TextWrapping="Wrap">Log in to Google Drive to list available spreadsheets</TextBlock>
+                <Button HorizontalAlignment="Right" Name="LoginButton" Click="LoginButton_OnClick" Background="SteelBlue">Login</Button>
+            </DockPanel>
+
+            <DockPanel Grid.Row="1" Margin="20 0 20 0" Name="LoadGamesPanel" Visibility="Collapsed">
+                <ComboBox Name="SheetsList" FontSize="14" Background="#404040" HorizontalAlignment="Stretch" DisplayMemberPath="Name" SelectedValuePath="Id" IsEditable="False" VerticalAlignment="Center" ItemsSource="{Binding Sheets}"></ComboBox>
+                <Button HorizontalAlignment="Right" Name="LoadButton" Click="LoadButton_OnClick" Background="SteelBlue">Load</Button>
             </DockPanel>
 
             <ListView Grid.Row="2" Margin="20 10 20 20" ItemsSource="{Binding Games}" Name="GamesListView" SelectionChanged="GamesListView_SelectionChanged" BorderThickness="0" Background="Transparent">
