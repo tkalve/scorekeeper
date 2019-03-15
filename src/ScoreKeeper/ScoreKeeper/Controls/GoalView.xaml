@@ -49,20 +49,31 @@
                 <ColumnDefinition Width="5*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Viewbox Grid.Row="0" Grid.RowSpan="1" Grid.Column="1">
+            <Viewbox Grid.Row="0" Grid.RowSpan="1" Grid.Column="1" Name="ClockTextBlockViewbox">
                 <TextBlock FontWeight="Bold">
                     <TextBlock.Text>
                         <MultiBinding StringFormat="{}{0}:{1:00}">
-                            <Binding Path="TimeLeft.Minutes" FallbackValue="8" />
+                            <Binding Path="TimeLeft.Minutes" FallbackValue="15" />
                             <Binding Path="TimeLeft.Seconds" FallbackValue="00" />
                         </MultiBinding>
                     </TextBlock.Text>
                 </TextBlock>
-
             </Viewbox>
+            <Viewbox Grid.Row="0" Grid.RowSpan="1" Grid.Column="1" Name="ClockTextBlockHundredsViewbox" Visibility="Collapsed">
+                <TextBlock FontWeight="Bold">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0}:{1:00}.{2:0}">
+                            <Binding Path="TimeLeft.Minutes" FallbackValue="15" />
+                            <Binding Path="TimeLeft.Seconds" FallbackValue="00" />
+                            <Binding Path="TimeLeft.Milliseconds" FallbackValue="0" Converter="{StaticResource tenthsConvert}" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Viewbox>
+
             <Viewbox Grid.Row="0" Grid.Column="0" Margin="40 40 40 40" VerticalAlignment="Bottom">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock FontWeight="Bold" Foreground="#808080" Text="{Binding CurrentRound, FallbackValue=1}" />
+                    <TextBlock Visibility="{Binding Rounds, Converter={StaticResource multipleRoundsConvert}}" FontWeight="Bold" Foreground="#808080" Text="{Binding CurrentRound, FallbackValue=1}" />
                 </StackPanel>
             </Viewbox>
             <Viewbox Grid.Row="0" Grid.Column="2" Margin="40 40 40 40" VerticalAlignment="Bottom">

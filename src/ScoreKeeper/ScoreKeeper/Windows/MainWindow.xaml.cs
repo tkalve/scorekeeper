@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using Microsoft.AspNet.SignalR;
@@ -20,7 +21,11 @@ using ScoreKeeper.Properties;
 using System.Windows.Input;
 using System.Windows.Media;
 using Google.Apis.Sheets.v4;
+using Button = System.Windows.Controls.Button;
 using Color = System.Windows.Media.Color;
+using MessageBox = System.Windows.MessageBox;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using Timer = System.Threading.Timer;
 
 namespace ScoreKeeper.Windows
 {
@@ -34,6 +39,11 @@ namespace ScoreKeeper.Windows
 
         public SheetReader SheetReader { get; set; }
 
+        public GoalWindow GoalWindow;
+
+        private readonly DispatcherTimer _timer;
+        private Stopwatch _stopwatch;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -42,39 +52,32 @@ namespace ScoreKeeper.Windows
             
             DataContext = GameHub.Instance;
 
-
             GameHub.Instance.PropertyChanged += MainViewModel_PropertyChanged;
 
+            _stopwatch = new Stopwatch();
             // Initialize the timer
-            _timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+            _timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Normal, delegate
             {
+                if (GameHub.Instance.CurrentGame == null) return;
+
+                var roundTime = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
+                GameHub.Instance.CurrentGame.TimeLeft = roundTime.Subtract(_stopwatch.Elapsed);
+
                 // Stop timer if time is out
                 // TODO: Show something graphically?
-                if (GameHub.Instance.CurrentGame.TimeLeft == TimeSpan.Zero)
+                if (GameHub.Instance.CurrentGame.TimeLeft <= TimeSpan.Zero) { 
                     _timer.Stop();
-                else
-                    GameHub.Instance.CurrentGame.TimeLeft = GameHub.Instance.CurrentGame.TimeLeft.Add(TimeSpan.FromSeconds(-1));
-
-                // Update hub if enabled
-                if (Settings.Default.EnableWebServer)
-                    UpdateHubClock();
+                    _stopwatch.Stop();
+                    GameHub.Instance.CurrentGame.TimeLeft = TimeSpan.Zero;
+                    TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+                }
 
             }, System.Windows.Application.Current.Dispatcher) { IsEnabled =  false};
         }
 
         private void MainViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "NetworkBroadcastCheckbox")
-            {
-            } else if (e.PropertyName == "WebServerCheckbox")
-            {
-                
-            }
         }
-
-        public GoalWindow GoalWindow;
-        
-        private readonly DispatcherTimer _timer;
 
         private void BroadcastTimerCallback()
         {
@@ -98,28 +101,9 @@ namespace ScoreKeeper.Windows
             GameHub.Instance.NetworkBroadcastEnabled = true;
         }
 
-        private void DisableBroadcast()
-        {
-            BroadcastClient?.Dispose();
-
-            GameHub.Instance.NetworkBroadcastEnabled = false;
-            if (BroadcastTimer != null)
-            {
-                BroadcastTimer.Change(Timeout.Infinite, Timeout.Infinite);
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    GameHub.Instance.NetworkBroadcastLog += ("Broadcast stopped.\n");
-                }));
-            }
-        }
-
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (Settings.Default.EnableBroadcast)
-                EnableBroadcast();
-            else
-                DisableBroadcast();
-
+            EnableBroadcast();
 
             // Add screens to dropdown
             foreach (var screen in System.Windows.Forms.Screen.AllScreens)
@@ -133,20 +117,27 @@ namespace ScoreKeeper.Windows
 
         private void StartTimerButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _timer.Start();
-            GameHub.Instance.CurrentGame.HalfTime = false;
-            TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            if (GameHub.Instance.CurrentGame.TimeLeft > TimeSpan.Zero) {
+                _timer.Start();
+                _stopwatch.Start();
+            
+                GameHub.Instance.CurrentGame.HalfTime = false;
+                TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            }
         }
 
         private void StopTimerButton_OnClick(object sender, RoutedEventArgs e)
         {
             _timer.Stop();
+            _stopwatch.Stop();
             TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
         }
 
         private void ResetTimerbutton_Click(object sender, RoutedEventArgs e)
         {
             _timer.Stop();
+            _stopwatch.Stop();
+            _stopwatch.Reset();
             GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
             TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
         }
@@ -167,45 +158,15 @@ namespace ScoreKeeper.Windows
             e.Handled = true;
         }
 
-        private void UpdateHubClock()
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<ScoreHub>();
-
-            context.Clients.All.UpdateClock(
-                $"{GameHub.Instance.CurrentGame.TimeLeft.Minutes}:{GameHub.Instance.CurrentGame.TimeLeft.Seconds:00}",
-                GameHub.Instance.CurrentGame.CurrentRound);
-        }
-        private void UpdateHubScore()
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<ScoreHub>();
-
-            context.Clients.All.UpdateScore(GameHub.Instance.CurrentGame.BlueTeamGoals, GameHub.Instance.CurrentGame.WhiteTeamGoals);
-        }
-
-        private void UpdateHub()
-        {
-            var context = GlobalHost.ConnectionManager.GetHubContext<ScoreHub>();
-            context.Clients.All.Update(
-                GameHub.Instance.CurrentGame.BlueTeamName,
-                GameHub.Instance.CurrentGame.WhiteTeamName,
-                GameHub.Instance.CurrentGame.BlueTeamGoals,
-                GameHub.Instance.CurrentGame.WhiteTeamGoals,
-                $"{GameHub.Instance.CurrentGame.TimeLeft.Minutes}:{GameHub.Instance.CurrentGame.TimeLeft.Seconds:00}",
-                GameHub.Instance.CurrentGame.CurrentRound
-            );
-        }
-
         private void GamesListButton_Click(object sender, RoutedEventArgs e)
         {
             ButtonExtensions.SetActive(GamesListButton, true);
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
-            ButtonExtensions.SetActive(NetworkBroadcastButton, false);
 
             GamesTab.Visibility = Visibility.Visible;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
-            NetworkBroadcastTab.Visibility = Visibility.Collapsed;
         }
 
         private void PreviewButton_OnClick(object sender, RoutedEventArgs e)
@@ -213,42 +174,25 @@ namespace ScoreKeeper.Windows
             ButtonExtensions.SetActive(GamesListButton, false);
             ButtonExtensions.SetActive(PreviewButton, true);
             ButtonExtensions.SetActive(ExternalDisplayButton, false);
-            ButtonExtensions.SetActive(NetworkBroadcastButton, false);
 
             GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Visible;
             ExternalDisplayTab.Visibility = Visibility.Collapsed;
-            NetworkBroadcastTab.Visibility = Visibility.Collapsed;
         }
         private void ExternalDisplayButton_OnClick(object sender, RoutedEventArgs e)
         {
             ButtonExtensions.SetActive(GamesListButton, false);
             ButtonExtensions.SetActive(PreviewButton, false);
             ButtonExtensions.SetActive(ExternalDisplayButton, true);
-            ButtonExtensions.SetActive(NetworkBroadcastButton, false);
 
             GamesTab.Visibility = Visibility.Collapsed;
             PreviewTab.Visibility = Visibility.Collapsed;
             ExternalDisplayTab.Visibility = Visibility.Visible;
-            NetworkBroadcastTab.Visibility = Visibility.Collapsed;
-        }
-        private void NetworkBroadcastButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            ButtonExtensions.SetActive(GamesListButton, false);
-            ButtonExtensions.SetActive(PreviewButton, false);
-            ButtonExtensions.SetActive(ExternalDisplayButton, false);
-            ButtonExtensions.SetActive(NetworkBroadcastButton, true);
-
-            GamesTab.Visibility = Visibility.Collapsed;
-            PreviewTab.Visibility = Visibility.Collapsed;
-            ExternalDisplayTab.Visibility = Visibility.Collapsed;
-            NetworkBroadcastTab.Visibility = Visibility.Visible;
         }
 
         private void DisplayItemButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var screen = ((Button)sender).DataContext as System.Windows.Forms.Screen;
-            if (screen != null)
+            if (((Button)sender).DataContext is Screen screen)
             {
                 GoalWindow?.Close();
                 GoalWindow = new GoalWindow();
@@ -299,24 +243,12 @@ namespace ScoreKeeper.Windows
             }
         }
 
-        private void EnableNetworkBroadcastButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            EnableBroadcast();
-        }
-
-        private void DisableNetworkBroadcastButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            DisableBroadcast();
-        }
-
         private void BlueUpButton_Click(object sender, RoutedEventArgs e)
         {
             if (GameHub.Instance.CurrentGame.BlueTeamGoals >= 0)
                 GameHub.Instance.CurrentGame.BlueTeamGoals++;
             else if (GameHub.Instance.CurrentGame.BlueTeamGoals < 0)
                 GameHub.Instance.CurrentGame.BlueTeamGoals = 0;
-
-            UpdateHubScore();
         }
 
         private void BlueDownButton_Click(object sender, RoutedEventArgs e)
@@ -325,8 +257,6 @@ namespace ScoreKeeper.Windows
                 GameHub.Instance.CurrentGame.BlueTeamGoals--;
             else if (GameHub.Instance.CurrentGame.BlueTeamGoals < 0)
                 GameHub.Instance.CurrentGame.BlueTeamGoals = 0;
-
-            UpdateHubScore();
         }
 
         private void WhiteUpButton_Click(object sender, RoutedEventArgs e)
@@ -335,8 +265,6 @@ namespace ScoreKeeper.Windows
                 GameHub.Instance.CurrentGame.WhiteTeamGoals++;
             else if (GameHub.Instance.CurrentGame.WhiteTeamGoals < 0)
                 GameHub.Instance.CurrentGame.WhiteTeamGoals = 0;
-
-            UpdateHubScore();
         }
 
         private void WhiteDownButton_Click(object sender, RoutedEventArgs e)
@@ -345,8 +273,6 @@ namespace ScoreKeeper.Windows
                 GameHub.Instance.CurrentGame.WhiteTeamGoals--;
             else if (GameHub.Instance.CurrentGame.WhiteTeamGoals < 0)
                 GameHub.Instance.CurrentGame.WhiteTeamGoals = 0;
-
-            UpdateHubScore();
         }
 
         private void Round1Button_Click(object sender, RoutedEventArgs e)
@@ -384,11 +310,15 @@ namespace ScoreKeeper.Windows
         private void GamesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GameHub.Instance.CurrentGame = GamesListView.SelectedItem as Game;
+            _stopwatch.Reset();
+            if (GameHub.Instance.CurrentGame != null) { 
+                _stopwatch.SetOffset(new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0).Subtract(GameHub.Instance.CurrentGame.TimeLeft));
+            }
         }
 
         private void TimerClock_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_timer.IsEnabled)
+            if (!_timer.IsEnabled && !_stopwatch.IsRunning)
             {
                 TimerClock.Visibility = Visibility.Collapsed;
                 TimerClockEdit.Visibility = Visibility.Visible;
@@ -406,6 +336,9 @@ namespace ScoreKeeper.Windows
                 var seconds = int.Parse(SecondsTextBox.Text);
 
                 var timeSpan = new TimeSpan(0, minutes, seconds);
+                var newElapsed = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0) - timeSpan;
+                var diff = newElapsed - _stopwatch.Elapsed;
+                _stopwatch.SetOffset(diff);
                 GameHub.Instance.CurrentGame.TimeLeft = timeSpan;
             }
             catch (Exception ex)
@@ -436,6 +369,8 @@ namespace ScoreKeeper.Windows
                 Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
                 SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
                 _timer.Stop();
+                _stopwatch.Stop();
+                _stopwatch.Reset();
                 GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
                 TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
             }
@@ -466,6 +401,11 @@ namespace ScoreKeeper.Windows
 
         private void LoadButton_OnClick(object sender, RoutedEventArgs e)
         {
+            if (_stopwatch.IsRunning)
+            {
+                MessageBox.Show("Only load games while the clock is not running", "Unable to load games", MessageBoxButton.OK, MessageBoxImage.Stop);
+                return;
+            }
             try
             {
                 SheetReader.Load(SheetsList.SelectedValue as string, GameHub.Instance.Games);

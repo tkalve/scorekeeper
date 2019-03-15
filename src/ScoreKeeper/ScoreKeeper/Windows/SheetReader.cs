@@ -105,10 +105,13 @@ namespace ScoreKeeper.Windows
 
         public void Load(string spreadsheetId, ObservableCollection<Game> gameList)
         {
+            if (gameList == null)
+                gameList = new ObservableCollection<Game>();
+
             try
             {
                 // Define request parameters.
-                var range = "GameList!A2:F";
+                var range = "GameList!A2:G";
                 SpreadsheetsResource.ValuesResource.GetRequest request =
                     SheetsService.Spreadsheets.Values.Get(spreadsheetId, range);
 
@@ -130,12 +133,21 @@ namespace ScoreKeeper.Windows
                                 minutes = 8;
                             }
 
+                            var rounds = 2;
+                            if (row.Count >= 7)
+                            {
+                                if (int.TryParse(row[6].ToString(), out rounds))
+                                {
+                                }
+                            }
+
                             gameList.Add(new Game(minutes)
                             {
                                 Id = int.Parse(row[0].ToString()),
                                 BlueTeamName = blue,
                                 WhiteTeamName = white,
-                                Type = type
+                                Type = type,
+                                Rounds = rounds
                             });
                         }
                     }

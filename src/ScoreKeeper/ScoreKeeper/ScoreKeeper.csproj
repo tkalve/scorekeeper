@@ -27,8 +27,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.5.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.6.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -173,16 +173,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\MultipleRoundsBooleanConverter.cs" />
     <Compile Include="GameHub.cs" />
     <Compile Include="Models\SheetObject.cs" />
     <Compile Include="Windows\GoalWindow.xaml.cs">
       <DependentUpon>GoalWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\InvertBooleanConverter.cs" />
+    <Compile Include="Converters\TenthsConverter.cs" />
+    <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\SheetReader.cs" />
+    <Compile Include="Windows\Stopwatch.cs" />
     <Page Include="Controls\DisplaysIcon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ScoreKeeper"
         xmlns:controls="clr-namespace:ScoreKeeper.Controls"
         xmlns:windows="clr-namespace:ScoreKeeper.Windows"
+        xmlns:converters="clr-namespace:ScoreKeeper.Converters"
         mc:Ignorable="d"
         Title="ScoreKeeper" Height="650" Width="1080"
         Loaded="MainWindow_OnLoaded" Background="#404040">
@@ -28,6 +29,12 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Opacity" Value="0.75" />
+                    <Setter Property="Foreground" Value="#C0C0C0"></Setter>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="Button" x:Key="BlueScoreButton">
             <Setter Property="Margin" Value="10 10 10 0" />
@@ -110,13 +117,6 @@
                                     <PathGeometry FillRule="Nonzero" Figures="M37,15L37,25C37,25.55,36.55,26,36,26L31,26 31,27 32,27C32.55,27,33,27.45,33,28L33,29 29,29 29,24 35,24 35,16 23,16 23,19 21,19 21,15C21,14.45,21.45,14,22,14L36,14C36.55,14,37,14.45,37,15z M28,21L28,31C28,31.55,27.55,32,27,32L22,32 22,33 23,33C23.55,33,24,33.45,24,34L24,35 16,35 16,34C16,33.45,16.45,33,17,33L18,33 18,32 13,32C12.45,32,12,31.55,12,31L12,21C12,20.45,12.45,20,13,20L27,20C27.55,20,28,20.45,28,21z M26,22L14,22 14,30 18,30 22,30 26,30 26,22z" />
                                 </Path.Data>
                             </Path>
-                        </Canvas>
-                    </Viewbox>
-                </Button>
-                <Button Style="{DynamicResource IconButtonStyle}" ToolTip="Network broadcast" Name="NetworkBroadcastButton" Click="NetworkBroadcastButton_OnClick">
-                    <Viewbox>
-                        <Canvas Width="100" Height="100" ClipToBounds="True" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-                            <Path Data="M38.999999,20.3 C43.099998,20.3 46.499999,23.600001 46.499999,27.8 46.499999,31.200002 44.400001,34.000001 41.400001,35.000001 L44.999999,75.800004 32.999999,75.800004 36.7,34.900002 C33.7,33.900002 31.499999,31.100001 31.499999,27.8 31.499999,23.700002 34.799999,20.3 38.999999,20.3 z M22.7,10.900001 L26.899999,15.100001 C23.499999,18.3 21.399999,22.8 21.399999,27.8 21.399999,32.8 23.499999,37.3 26.899999,40.500001 L22.7,44.700002 C18.299999,40.400002 15.499999,34.500001 15.499999,27.8 15.499999,21.200002 18.2,15.200001 22.7,10.900001 z M55.299999,10.9 C59.799999,15.200001 62.599998,21.200002 62.499999,27.8 62.499999,34.400002 59.7,40.400002 55.299999,44.700002 L51.099998,40.500001 C54.499999,37.3 56.599998,32.8 56.599998,27.8 56.599998,22.8 54.499999,18.3 51.099998,15.100001 z M66.199996,0 C73.499999,7.1000007 77.999999,16.9 77.999999,27.8 77.999999,38.8 73.499999,48.599999 66.199996,55.599999 L61.999999,51.400002 C68.199996,45.400002 71.999999,37.099999 71.999999,27.8 71.999999,18.600001 68.199996,10.200001 61.999999,4.2000011 z M11.799998,0 L15.999999,4.2000011 C9.7999995,10.200001 5.9999993,18.600001 5.9999998,27.8 5.9999993,37.000001 9.7999995,45.400002 15.999999,51.400002 L11.799998,55.599999 C4.4999993,48.599999 -6.6121044E-07,38.700002 5.6843419E-14,27.8 -6.6121044E-07,16.9 4.4999993,7.1000007 11.799998,0 z" Fill="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Height="100" Stretch="Fill"  Width="100"/>
                         </Canvas>
                     </Viewbox>
                 </Button>
@@ -216,7 +216,7 @@
             </Border>
             <StackPanel Grid.Row="1"></StackPanel>
         </Grid>
-        <Grid Name="ExternalDisplayTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Background="#404040" Visibility="Collapsed">
+        <Grid Name="ExternalDisplayTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Background="#404040" Visibility="Collapsed">
             <StackPanel Margin="20">
                 <Label Content="Available displays" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
                 <ItemsControl Name="DisplaysItemsControl" Margin="0">
@@ -248,17 +248,6 @@
                 </StackPanel>
             </StackPanel>
 
-        </Grid>
-        <Grid Name="NetworkBroadcastTab" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Background="#404040" Visibility="Collapsed">
-            <StackPanel Margin="20">
-                <Label Content="Network broadcast" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0 0 0 20" Padding="0"></Label>
-                <TextBlock Foreground="#c0c0c0" Margin="0 0 0 0" FontSize="12" TextWrapping="Wrap">Enable or disable network broadcast. Network broadcast needs to be enabled to use an external scoreboard or scorehub.</TextBlock>
-                <StackPanel Orientation="Horizontal">
-                    <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding NetworkBroadcastEnabled, Converter={StaticResource boolConvert}}" Content="Enable" Name="EnableNetworkBroadcastButton" Click="EnableNetworkBroadcastButton_OnClick"></Button>
-                    <Button Style="{StaticResource BlueButton}" IsEnabled="{Binding NetworkBroadcastEnabled}" Content="Disable" Name="DisableNetworkBroadcastButton" Click="DisableNetworkBroadcastButton_OnClick"></Button>
-                </StackPanel>
-                <TextBlock Foreground="#C0C0C0" Text="{Binding NetworkBroadcastLog}" TextWrapping="Wrap" VerticalAlignment="Bottom"></TextBlock>
-            </StackPanel>
         </Grid>
 
         <Border Grid.Row="1" Grid.Column="0" Background="#303030">
@@ -318,9 +307,9 @@
                 </TextBlock>
                 <Button Margin="10 10 10 5"  Name="StartTimerButton" Click="StartTimerButton_OnClick" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">Start</Button>
                 <Button Margin="10 5 10 10" Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1">Stop</Button>
-                <Button Margin="10 5 10 10" Name="HalftimeButton" Click="HalftimeButton_OnClick" Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Background="#808080">Half</Button>
+                <Button Margin="10 5 10 10" Name="HalftimeButton" Click="HalftimeButton_OnClick" Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Background="#808080" IsEnabled="{Binding CurrentGame.Rounds, Converter={StaticResource multipleRoundsBoolConvert}}">Half</Button>
                 <Button Background="#808080" FontSize="25" Padding="0" Margin="10 10 10 7"  Name="Round1Button" Click="Round1Button_Click" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2">1</Button>
-                <Button Background="#808080" FontSize="25" Padding="0" Margin="10 8 10 7" Name="Round2Button" Click="Round2Button_Click" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2">2</Button>
+                <Button Background="#808080" FontSize="25" Padding="0" Margin="10 8 10 7" Name="Round2Button" Click="Round2Button_Click" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2"  IsEnabled="{Binding CurrentGame.Rounds, Converter={StaticResource multipleRoundsBoolConvert}}">2</Button>
                 <Button Background="#808080" FontSize="20" Padding="0" Margin="10 8 10 10" Name="SuddenDeathButton" Click="SuddenDeathButton_Click" Grid.Row="4" Grid.RowSpan="2" Grid.Column="2">SD</Button>
                 <Button Name="ResetTimerbutton" Click="ResetTimerbutton_Click" Content="RESET" Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Background="#FFC71A1A">
                     <Button.LayoutTransform>
@@ -343,9 +332,10 @@
                 <Viewbox Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="1" Grid.RowSpan="6" Margin="20" Name="TimerClockDisplay" Visibility="Visible">
                     <TextBlock MouseRightButtonUp="TimerClock_OnMouseRightButtonUp" Name="TimerClock" Foreground="#808080" FontWeight="Bold" FontSize="80" HorizontalAlignment="Center"  VerticalAlignment="Center">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0}:{1:00}">
+                            <MultiBinding StringFormat="{}{0}:{1:00}.{2:0}">
                                 <Binding Path="CurrentGame.TimeLeft.Minutes" FallbackValue="15" />
                                 <Binding Path="CurrentGame.TimeLeft.Seconds" FallbackValue="00" />
+                                <Binding Path="CurrentGame.TimeLeft.Milliseconds" FallbackValue="0" Converter="{StaticResource tenthsConvert}" />
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
