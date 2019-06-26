@@ -10,7 +10,14 @@
         <converters:TenthsConverter x:Key="tenthsConvert" />
         <converters:MultipleRoundsBooleanConverter x:Key="multipleRoundsBoolConvert" />
         <converters:MultipleRoundsVisibilityConverter x:Key="multipleRoundsConvert" />
-        <BooleanToVisibilityConverter  x:Key="boolToVisConvert"/>
+        <converters:BooleanToVisibilityConverter 
+            x:Key="boolToVisConvert" 
+            True="Visible" 
+            False="Collapsed" />
+        <converters:BooleanToVisibilityConverter 
+            x:Key="boolToVisInvertConvert" 
+            True="Collapsed" 
+            False="Visible" />
 
         <DataTemplate x:Key="DisplayItemTemplate">
             <Grid>

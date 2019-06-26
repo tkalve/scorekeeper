@@ -9,7 +9,9 @@
         xmlns:converters="clr-namespace:ScoreKeeper.Converters"
         mc:Ignorable="d"
         Title="ScoreKeeper" Height="650" Width="1080"
-        Loaded="MainWindow_OnLoaded" Background="#404040">
+        Loaded="MainWindow_OnLoaded"
+        Closing="MainWindow_OnClosing"
+        Background="#404040">
 
     <Window.Resources>
         <Style TargetType="Button">
@@ -291,27 +293,30 @@
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="3*"></ColumnDefinition>
-                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                    <ColumnDefinition Width="8*"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="7*"></ColumnDefinition>
                     <ColumnDefinition Width="2*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Margin="0 15" Grid.Row="0" Grid.RowSpan="6"  Grid.Column="0" Grid.ColumnSpan="1" FontSize="32" Foreground="#C0C0C0" FontWeight="Bold" Text="TIMER" VerticalAlignment="Top">
+                <TextBlock Margin="0 15" Grid.Row="0" Grid.RowSpan="6"  Grid.Column="0" Grid.ColumnSpan="1" FontSize="32" Foreground="#C0C0C0" FontWeight="Bold" Text="KLOKKE" VerticalAlignment="Top">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="-90" />
                     </TextBlock.LayoutTransform>
                 </TextBlock>
                 <Button Margin="10 10 10 5"  Name="StartTimerButton" Click="StartTimerButton_OnClick" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">Start</Button>
-                <Button Margin="10 5 10 10" Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1">Stop</Button>
-                <Button Margin="10 5 10 10" Name="HalftimeButton" Click="HalftimeButton_OnClick" Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Background="#808080" IsEnabled="{Binding CurrentGame.Rounds, Converter={StaticResource multipleRoundsBoolConvert}}">Half</Button>
+                <Button Margin="10 5 10 10" Name="StopTimerButton" Click="StopTimerButton_OnClick" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1">Stopp</Button>
+                <Button Margin="10 5 10 10" Name="HalftimeButton" Click="HalftimeButton_OnClick" Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Background="#808080" IsEnabled="{Binding CurrentGame.Rounds, Converter={StaticResource multipleRoundsBoolConvert}}">Pause</Button>
+                <Button Margin="10 5 10 10" Name="TimeoutButton" Click="TimeoutButton_OnClick" Grid.Row="6" Grid.RowSpan="2" Grid.Column="1" Background="#808080">Timeout</Button>
                 <Button Background="#808080" FontSize="25" Padding="0" Margin="10 10 10 7"  Name="Round1Button" Click="Round1Button_Click" Grid.Row="0" Grid.RowSpan="2" Grid.Column="2">1</Button>
                 <Button Background="#808080" FontSize="25" Padding="0" Margin="10 8 10 7" Name="Round2Button" Click="Round2Button_Click" Grid.Row="2" Grid.RowSpan="2" Grid.Column="2"  IsEnabled="{Binding CurrentGame.Rounds, Converter={StaticResource multipleRoundsBoolConvert}}">2</Button>
-                <Button Background="#808080" FontSize="20" Padding="0" Margin="10 8 10 10" Name="SuddenDeathButton" Click="SuddenDeathButton_Click" Grid.Row="4" Grid.RowSpan="2" Grid.Column="2">SD</Button>
-                <Button Name="ResetTimerbutton" Click="ResetTimerbutton_Click" Content="RESET" Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Background="#FFC71A1A">
+                <Button Background="#808080" FontSize="20" Padding="0" Margin="10 8 10 10" Name="SuddenDeathButton" Click="SuddenDeathButton_Click" Grid.Row="4" Grid.RowSpan="2" Grid.Column="2">Sudden</Button>
+                <Button Name="ResetTimerbutton" Click="ResetTimerbutton_Click" Content="RESETT" Grid.Row="0" Grid.RowSpan="6" Grid.Column="4" Background="#FFC71A1A">
                     <Button.LayoutTransform>
                         <RotateTransform Angle="-90" />
                     </Button.LayoutTransform>
@@ -340,6 +345,27 @@
                         </TextBlock.Text>
                     </TextBlock>
                 </Viewbox>
+                <Viewbox Grid.Row="5" Grid.Column="3" Grid.RowSpan="3" Margin="20" Visibility="{Binding CurrentGame.HalfTime, Converter={StaticResource boolToVisConvert}}">
+                    <TextBlock Foreground="#808080" FontWeight="Bold" FontSize="80" HorizontalAlignment="Center"  VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}PAUSE ({0}:{1:00})">
+                                <Binding Path="CurrentGame.HalfTimeTimeLeft.Minutes" FallbackValue="15" />
+                                <Binding Path="CurrentGame.HalfTimeTimeLeft.Seconds" FallbackValue="00" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Viewbox>
+                <Viewbox Grid.Row="5" Grid.Column="3" Grid.RowSpan="3" Margin="20" Visibility="{Binding CurrentGame.Timeout, Converter={StaticResource boolToVisConvert}}">
+                    <TextBlock Foreground="#808080" FontWeight="Bold" FontSize="80" HorizontalAlignment="Center"  VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}TIMEOUT ({0}:{1:00})">
+                                <Binding Path="CurrentGame.TimeoutTimeLeft.Minutes" FallbackValue="15" />
+                                <Binding Path="CurrentGame.TimeoutTimeLeft.Seconds" FallbackValue="00" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Viewbox>
+
             </Grid>
         </Border>
 
@@ -357,7 +383,7 @@
                     <ColumnDefinition Width="2*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Margin="0 15" Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" Grid.ColumnSpan="1" FontSize="32" Foreground="#C0C0C0" FontWeight="Bold" Text="SCORE" VerticalAlignment="Top">
+                <TextBlock Margin="0 15" Grid.Row="0" Grid.RowSpan="2"  Grid.Column="0" Grid.ColumnSpan="1" FontSize="32" Foreground="#C0C0C0" FontWeight="Bold" Text="MÅL" VerticalAlignment="Top">
                     <TextBlock.LayoutTransform>
                         <RotateTransform Angle="-90" />
                     </TextBlock.LayoutTransform>

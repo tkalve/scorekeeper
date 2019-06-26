@@ -141,13 +141,23 @@ namespace ScoreKeeper.Windows
                                 }
                             }
 
+                            var halfTimeMinutes = 5;
+                            var timeoutMinutes = 2;
+                            if (row.Count >= 9)
+                            {
+                                int.TryParse(row[7].ToString(), out halfTimeMinutes);
+                                int.TryParse(row[8].ToString(), out timeoutMinutes);
+                            }
+
                             gameList.Add(new Game(minutes)
                             {
                                 Id = int.Parse(row[0].ToString()),
                                 BlueTeamName = blue,
                                 WhiteTeamName = white,
                                 Type = type,
-                                Rounds = rounds
+                                Rounds = rounds,
+                                HalfTimeMinutes = halfTimeMinutes,
+                                TimeoutMinutes = timeoutMinutes
                             });
                         }
                     }

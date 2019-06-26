@@ -131,6 +131,9 @@
     <Reference Include="Microsoft.Owin.StaticFiles, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.StaticFiles.4.0.0\lib\net451\Microsoft.Owin.StaticFiles.dll</HintPath>
     </Reference>
+    <Reference Include="NDILibDotNet2">
+      <HintPath>..\..\..\lib\NDILibDotNet2.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -184,6 +187,9 @@
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ScoreBugWindow.xaml.cs">
+      <DependentUpon>ScoreBugWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\SheetReader.cs" />
     <Compile Include="Windows\Stopwatch.cs" />
     <Page Include="Controls\DisplaysIcon.xaml">
@@ -220,6 +226,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ScoreBugWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

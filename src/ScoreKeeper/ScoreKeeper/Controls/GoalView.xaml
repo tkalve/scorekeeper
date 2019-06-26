@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="4*" />
             <RowDefinition Height="4*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
@@ -84,7 +84,27 @@
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-            <Label Visibility="{Binding HalfTime, Converter={StaticResource boolToVisConvert}}" FontSize="44" FontWeight="Bold" HorizontalAlignment="Center">HALFTIME</Label>
+            <Viewbox>
+                <TextBlock Visibility="{Binding HalfTime, Converter={StaticResource boolToVisConvert}}" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}PAUSE ({0}:{1:00})">
+                            <Binding Path="HalfTimeTimeLeft.Minutes" FallbackValue="15" />
+                            <Binding Path="HalfTimeTimeLeft.Seconds" FallbackValue="00" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+
+                </TextBlock>
+            </Viewbox>
+            <Viewbox>
+                <TextBlock Visibility="{Binding Timeout, Converter={StaticResource boolToVisConvert}}" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}TIMEOUT ({0}:{1:00})">
+                            <Binding Path="TimeoutTimeLeft.Minutes" FallbackValue="15" />
+                            <Binding Path="TimeoutTimeLeft.Seconds" FallbackValue="00" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </Viewbox>
         </Grid>
 
     </Grid>

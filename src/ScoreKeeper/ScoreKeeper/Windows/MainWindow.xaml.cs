@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
@@ -40,9 +41,12 @@ namespace ScoreKeeper.Windows
         public SheetReader SheetReader { get; set; }
 
         public GoalWindow GoalWindow;
+        public ScoreBugWindow ScoreBugWindow;
 
         private readonly DispatcherTimer _timer;
         private Stopwatch _stopwatch;
+        private Stopwatch _pauseStopWatch;
+        private Stopwatch _timeoutStopWatch;
 
         public MainWindow()
         {
@@ -55,6 +59,8 @@ namespace ScoreKeeper.Windows
             GameHub.Instance.PropertyChanged += MainViewModel_PropertyChanged;
 
             _stopwatch = new Stopwatch();
+            _timeoutStopWatch = new Stopwatch();
+            _pauseStopWatch = new Stopwatch();
             // Initialize the timer
             _timer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 50), DispatcherPriority.Normal, delegate
             {
@@ -63,16 +69,46 @@ namespace ScoreKeeper.Windows
                 var roundTime = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
                 GameHub.Instance.CurrentGame.TimeLeft = roundTime.Subtract(_stopwatch.Elapsed);
 
+
+                // Calculate timeout if active
+                if (GameHub.Instance.CurrentGame.Timeout) { 
+                    var timeoutTime = new TimeSpan(0, GameHub.Instance.CurrentGame.TimeoutMinutes, 0);
+                    GameHub.Instance.CurrentGame.TimeoutTimeLeft = timeoutTime.Subtract(_timeoutStopWatch.Elapsed);
+
+                    // Stop timeout if timeout is finished
+                    if (GameHub.Instance.CurrentGame.TimeoutTimeLeft <= TimeSpan.Zero)
+                    {
+                        _timeoutStopWatch.Stop();
+                        GameHub.Instance.CurrentGame.Timeout = false;
+                        GameHub.Instance.CurrentGame.TimeoutTimeLeft =
+                            new TimeSpan(0, GameHub.Instance.CurrentGame.TimeoutMinutes, 0);
+                    }
+
+                }
+
+                // Calculate halftime if active
+                if (GameHub.Instance.CurrentGame.HalfTime)
+                {
+                    var halfTimeTime = new TimeSpan(0, GameHub.Instance.CurrentGame.HalfTimeMinutes, 0);
+                    GameHub.Instance.CurrentGame.HalfTimeTimeLeft = halfTimeTime.Subtract(_pauseStopWatch.Elapsed);
+
+                    if (GameHub.Instance.CurrentGame.HalfTimeTimeLeft <= TimeSpan.Zero)
+                    {
+                        _pauseStopWatch.Stop();
+                        GameHub.Instance.CurrentGame.HalfTimeTimeLeft =
+                            new TimeSpan(0, GameHub.Instance.CurrentGame.HalfTimeMinutes, 0);
+                    }
+                }
+
                 // Stop timer if time is out
                 // TODO: Show something graphically?
                 if (GameHub.Instance.CurrentGame.TimeLeft <= TimeSpan.Zero) { 
-                    _timer.Stop();
                     _stopwatch.Stop();
                     GameHub.Instance.CurrentGame.TimeLeft = TimeSpan.Zero;
                     TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
                 }
 
-            }, System.Windows.Application.Current.Dispatcher) { IsEnabled =  false};
+            }, System.Windows.Application.Current.Dispatcher) { IsEnabled = true};
         }
 
         private void MainViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -101,9 +137,17 @@ namespace ScoreKeeper.Windows
             GameHub.Instance.NetworkBroadcastEnabled = true;
         }
 
+        private void EnableScorebugBroadcast()
+        {
+            ScoreBugWindow = new ScoreBugWindow();
+            ScoreBugWindow.Show();
+            ScoreBugWindow.Hide();
+        }
+
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             EnableBroadcast();
+            EnableScorebugBroadcast();
 
             // Add screens to dropdown
             foreach (var screen in System.Windows.Forms.Screen.AllScreens)
@@ -123,23 +167,27 @@ namespace ScoreKeeper.Windows
             
                 GameHub.Instance.CurrentGame.HalfTime = false;
                 TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+
+                HalfTimeDisable();
+                TimeoutDisable();
             }
         }
 
         private void StopTimerButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _timer.Stop();
             _stopwatch.Stop();
             TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
         }
 
         private void ResetTimerbutton_Click(object sender, RoutedEventArgs e)
         {
-            _timer.Stop();
             _stopwatch.Stop();
             _stopwatch.Reset();
             GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
             TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+
+            HalfTimeDisable();
+            TimeoutDisable();
         }
 
         private void VersionLabel_OnMouseEnter(object sender, MouseEventArgs e)
@@ -279,6 +327,7 @@ namespace ScoreKeeper.Windows
         {
             GameHub.Instance.CurrentGame.CurrentRound = 1;
             GameHub.Instance.CurrentGame.Extra = "";
+            GameHub.Instance.CurrentGame.SuddenDeath = false;
             Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
             Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 128,128,128));
             SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
@@ -288,6 +337,7 @@ namespace ScoreKeeper.Windows
         {
             GameHub.Instance.CurrentGame.CurrentRound = 2;
             GameHub.Instance.CurrentGame.Extra = "";
+            GameHub.Instance.CurrentGame.SuddenDeath = false;
             Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
             Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
             SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
@@ -296,6 +346,7 @@ namespace ScoreKeeper.Windows
         {
             GameHub.Instance.CurrentGame.CurrentRound = null;
             GameHub.Instance.CurrentGame.Extra = "SD";
+            GameHub.Instance.CurrentGame.SuddenDeath = true;
             Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
             Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 127, 128));
             SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
@@ -318,7 +369,7 @@ namespace ScoreKeeper.Windows
 
         private void TimerClock_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!_timer.IsEnabled && !_stopwatch.IsRunning)
+            if (!_stopwatch.IsRunning)
             {
                 TimerClock.Visibility = Visibility.Collapsed;
                 TimerClockEdit.Visibility = Visibility.Visible;
@@ -358,17 +409,21 @@ namespace ScoreKeeper.Windows
 
         private void HalftimeButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (GameHub.Instance.CurrentGame.HalfTime)
-                GameHub.Instance.CurrentGame.HalfTime = false;
+            if (GameHub.Instance.CurrentGame.HalfTime) { 
+                HalfTimeDisable();
+                TimeoutDisable();
+            }
             else
             {
+                HalfTimeEnable();
+                TimeoutDisable();
+
                 GameHub.Instance.CurrentGame.CurrentRound = 2;
                 GameHub.Instance.CurrentGame.Extra = "";
-                GameHub.Instance.CurrentGame.HalfTime = true;
                 Round1Button.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
                 Round2Button.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
                 SuddenDeathButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
-                _timer.Stop();
+
                 _stopwatch.Stop();
                 _stopwatch.Reset();
                 GameHub.Instance.CurrentGame.TimeLeft = new TimeSpan(0, GameHub.Instance.CurrentGame.RoundMinutes, 0);
@@ -415,6 +470,75 @@ namespace ScoreKeeper.Windows
             {
                 MessageBox.Show(ex.Message, "An error occured loading sheet", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void TimeoutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+
+            if (GameHub.Instance.CurrentGame.Timeout)
+            {
+                //if (GameHub.Instance.CurrentGame.TimeLeft > TimeSpan.Zero)
+                //{
+                //    _timer.Start();
+                //    _stopwatch.Start();
+
+                //    TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                //}
+                HalfTimeDisable();
+                TimeoutDisable();
+            }
+            else
+            {
+                _stopwatch.Stop();
+
+                TimeoutEnable();
+                HalfTimeDisable();
+            }
+        }
+
+        private void HalfTimeEnable()
+        {
+            _pauseStopWatch.Reset();
+            _pauseStopWatch.Start();
+
+            GameHub.Instance.CurrentGame.HalfTime = true;
+            GameHub.Instance.CurrentGame.Timeout = false;
+            TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+            HalftimeButton.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+        }
+
+        private void HalfTimeDisable()
+        {
+            _pauseStopWatch.Stop();
+
+            GameHub.Instance.CurrentGame.HalfTime = false;
+            HalftimeButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+        }
+
+        private void TimeoutEnable()
+        {
+            _timer.Start();
+            _timeoutStopWatch.Reset();
+            _timeoutStopWatch.Start();
+
+            GameHub.Instance.CurrentGame.Timeout = true;
+            GameHub.Instance.CurrentGame.HalfTime = false;
+            TimerClock.Foreground = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+            TimeoutButton.Background = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
+        }
+
+        private void TimeoutDisable()
+        {
+            _timeoutStopWatch.Stop();
+
+            GameHub.Instance.CurrentGame.Timeout = false;
+            TimeoutButton.Background = new SolidColorBrush(Color.FromArgb(255, 128, 128, 128));
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            GoalWindow?.Close();
+            ScoreBugWindow?.Close();
         }
     }
 
