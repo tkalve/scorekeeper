@@ -111,7 +111,7 @@ namespace ScoreKeeper.Windows
             try
             {
                 // Define request parameters.
-                var range = "GameList!A2:G";
+                var range = "GameList!A2:I";
                 SpreadsheetsResource.ValuesResource.GetRequest request =
                     SheetsService.Spreadsheets.Values.Get(spreadsheetId, range);
 
