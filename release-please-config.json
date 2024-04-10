@@ -4,9 +4,9 @@
   "bump-patch-for-minor-pre-major": true,
   "changelog-sections": [
     { "type": "feat", "section": "Features", "hidden": false },
-    { "type": "feat(scorehub)", "section": "ScoreHub features", "hidden": false },
+    { "type": "feat", "scope": "scorehub", "section": "ScoreHub features", "hidden": false },
     { "type": "fix", "section": "Bug fixes", "hidden": false },
-    { "type": "fix(scorehub)", "section": "ScoreHub bug fixes", "hidden": false },
+    { "type": "fix", "scope": "scorehub", "section": "ScoreHub bug fixes", "hidden": false },
     { "type": "chore", "section": "Miscellaneous", "hidden": false },
     { "type": "perf", "section": "Performance", "hidden": false },
     { "type": "style", "section": "Miscellaneous", "hidden": false },
