@@ -1,0 +1,41 @@
+{
+  "include-component-in-tag": false,
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "changelog-sections": [
+    { "type": "feat", "section": "Features", "hidden": false },
+    { "type": "feat(scorehub)", "section": "ScoreHub features", "hidden": false },
+    { "type": "fix", "section": "Bug fixes", "hidden": false },
+    { "type": "fix(scorehub)", "section": "ScoreHub bug fixes", "hidden": false },
+    { "type": "chore", "section": "Miscellaneous", "hidden": false },
+    { "type": "perf", "section": "Performance", "hidden": false },
+    { "type": "style", "section": "Miscellaneous", "hidden": false },
+    { "type": "build", "section": "Miscellaneous", "hidden": true },
+    { "type": "ci", "section": "Miscellaneous", "hidden": true },
+    { "type": "refactor", "section": "Miscellaneous", "hidden": true },
+    { "type": "revert", "section": "Miscellaneous", "hidden": true },
+    { "type": "test", "section": "Miscellaneous", "hidden": true },
+    { "type": "docs", "section": "Documentation", "hidden": true }
+  ],
+  "packages": {
+    ".": {
+      "component": "ScoreKeeper",
+      "release-type": "simple",
+      "extra-files": [
+        {
+          "type": "xml",
+          "path": "src/ScoreKeeper/ScoreKeeper/ScoreKeeper.csproj",
+          "xpath": "//Project/PropertyGroup/Version"
+        },
+        {
+          "type": "xml",
+          "path": "src/ScoreKeeper/ScoreHub/ScoreHub.csproj",
+          "xpath": "//Project/PropertyGroup/Version"
+        }
+      ]
+    }
+  },
+  "plugins": [
+    "sentence-case"
+  ]
+}
